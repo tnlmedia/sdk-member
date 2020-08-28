@@ -3,9 +3,22 @@
 namespace Tnlmedia\Member;
 
 use Illuminate\Support\ServiceProvider;
+use Laravel\Lumen\Application as LumenApplication;
+use Illuminate\Foundation\Application as IlluminateApplication;
+
 
 class MemberServiceProvider extends ServiceProvider
 {
+    protected $defer = false;
+
+    protected $provider;
+
+    public function __construct($app)
+    {
+        parent::__construct($app);
+
+        $this->provider = $this->getProvider();
+    }
     /**
      * Register services.
      *
@@ -13,9 +26,7 @@ class MemberServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton('member',function(){
-            return new Member();
-        });
+        return $this->provider->register();
     }
 
     /**
@@ -25,6 +36,26 @@ class MemberServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        if (method_exists($this->provider, 'boot')) {
+            return $this->provider->boot();
+        }
+    }
+
+    private function getProvider()
+    {
+        if ($this->app instanceof LumenApplication) {
+            $provider = '\Tnlmedia\Member\MemberServiceProviderLumen';
+        } elseif (version_compare(IlluminateApplication::VERSION, '5.0', '<')) {
+            $provider = '\Tnlmedia\Member\MemberServiceProviderLaravel4';
+        } else {
+            $provider = '\Tnlmedia\Member\MemberServiceProviderLaravelRecent';
+        }
+
+        return new $provider($this->app);
+    }
+
+    public function provides()
+    {
+        return ['member'];
     }
 }

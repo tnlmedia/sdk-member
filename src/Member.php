@@ -2,22 +2,37 @@
 
 namespace Tnlmedia\Member;
 
-use Symfony\Component\HttpFoundation\RedirectResponse;
-
 class Member
 {
-    protected $api_url;
+    protected $api_uri;
     protected $client_id;
     protected $client_secret;
     protected $redirect_url;
+    protected $scope;
 
-    public function __construct()
+    public function __construct($config = [])
     {
-        $this->api_uri = env('TNLMEDIA_MEMBER_API_URI');
-        $this->client_id = env('TNLMEDIA_MEMBER_CLIENT_ID');
-        $this->client_secret = env('TNLMEDIA_MEMBER_CLIENT_SECRET');
-        $this->redirect_url = env('TNLMEDIA_MEMBER_REDIRECT_URL');
+        $this->configure($config);
         $this->scope = 'user_basic user_profile user_connect';
+    }
+
+    private function configure($config)
+    {
+        if (isset($config['api_uri'])) {
+            $this->api_uri = $config['api_uri'];
+        }
+        
+        if (isset($config['client_id'])) {
+            $this->client_id = $config['client_id'];
+        }
+        
+        if (isset($config['client_secret'])) {
+            $this->client_secret = $config['client_secret'];
+        }
+        
+        if (isset($config['redirect_url'])) {
+            $this->redirect_url = $config['redirect_url'];
+        }
     }
     
     /*
@@ -39,6 +54,7 @@ class Member
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+       
         $response = json_decode(curl_exec($ch), true);
         curl_close($ch);
         if ($response and isset($response['access_token'])) {
@@ -57,8 +73,7 @@ class Member
             'redirect_uri'  => $this->redirect_url,
         ];
 
-        $url = 'https://greenroom-lista-web3.tnlmedia.com/?'. http_build_query($fields);
-        return new RedirectResponse($url);
+        return 'https://greenroom-lista-web3.tnlmedia.com/?'. http_build_query($fields);
     }
     
     /*
