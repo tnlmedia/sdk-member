@@ -5,15 +5,20 @@ namespace Tnlmedia\Member;
 class Member
 {
     protected $api_uri;
+    
     protected $client_id;
+    
     protected $client_secret;
+    
     protected $redirect_url;
-    protected $scope;
+
+    protected $scope = 'user_basic user_profile';
+    
+    protected $stateless = false;
 
     public function __construct($config = [])
     {
         $this->configure($config);
-        $this->scope = 'user_basic user_profile user_connect';
     }
 
     private function configure($config)
@@ -68,12 +73,23 @@ class Member
      */
     public function redirect() 
     {
+        $state = null;
+
+        if ($this->usesState()) {
+            session_start();
+            $_SESSION['state'] = $state = $this->getState();
+        }
+        
         $fields = [
             'client_id'     => $this->client_id,
             'redirect_uri'  => $this->redirect_url,
         ];
 
-        return 'https://greenroom-lista-web3.tnlmedia.com/?'. http_build_query($fields);
+        if ($this->usesState()) {
+            $fields['state'] = $state;
+        }
+
+        return 'https://greenroom-lista-web1.tnlmedia.com/?'. http_build_query($fields);
     }
     
     /*
@@ -81,9 +97,17 @@ class Member
      */
     public function user()
     {
-        $token = $this->getAccessTokenResponse(request()->input('code'));
+        if (!isset($_GET['code'])) {
+            return false;
+        }
+        if ($this->hasInvalidState()) {
+            return false;
+        }
+        
+        $token = $this->getAccessTokenResponse($_GET['code']);
         
         $user = $this->getUserByToken($token);
+
         return $user;
     }
 
@@ -188,4 +212,55 @@ class Member
         return $response;
         
     }
+    
+    /**
+     * Determine if the current request / session has a mismatching "state".
+     */
+    protected function hasInvalidState()
+    {
+        if ($this->isStateless()) {
+            return false;
+        }
+
+        session_start();
+
+        $state = $_SESSION['state'];
+        
+        return ! (strlen($state) > 0 && $_GET['state'] === $state);
+    }
+
+    /**
+     * Determine if the provider is operating with state.
+     */
+    protected function usesState()
+    {
+        return ! $this->stateless;
+    }   
+
+    /**
+     * Determine if the provider is operating as stateless.
+     */
+    protected function isStateless()
+    {
+        return $this->stateless;
+    }
+
+    /**
+     * Indicates that the provider should operate as stateless.
+     */
+    public function stateless()
+    {
+        $this->stateless = true;
+
+        return $this;
+    }
+    
+    /**
+     * Get the string used for session state.
+     */      
+    protected function getState()
+    {
+        return md5(mt_rand());
+    }
+
 }
