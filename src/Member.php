@@ -43,7 +43,7 @@ class Member
     /*
      * get token by code
      */
-    public function getAccessTokenResponse($code)
+    private function getAccessTokenResponse($code)
     {
         $api_url = $this->api_uri . '/token';
         $post_data = [
@@ -59,9 +59,13 @@ class Member
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
-       
-        $response = json_decode(curl_exec($ch), true);
+        $response = curl_exec($ch);
+        if (curl_errno($ch)) {
+            return false;
+        }
         curl_close($ch);
+        
+        $response = json_decode($response, true);
         if ($response and isset($response['access_token'])) {
             return $response['access_token'];            
         }
@@ -89,7 +93,8 @@ class Member
             $fields['state'] = $state;
         }
 
-        return 'https://greenroom-lista-web1.tnlmedia.com/?'. http_build_query($fields);
+        $redirect_url = 'https://greenroom-lista-web1.tnlmedia.com/?'. http_build_query($fields);
+        header('Location: ' . filter_var($redirect_url, FILTER_SANITIZE_URL));
     }
     
     /*
@@ -100,15 +105,54 @@ class Member
         if (!isset($_GET['code'])) {
             return false;
         }
+
         if ($this->hasInvalidState()) {
             return false;
         }
         
         $token = $this->getAccessTokenResponse($_GET['code']);
         
-        $user = $this->getUserByToken($token);
+        $user_result = $this->getUserByToken($token);
+        
+        if ($user_result and $user_result['code'] == 200 and isset($user_result['data'])) {
+            return $this->buildUserObj($user_result);
+        } else {
+            return null;
+        }
+    }
 
+    /*
+     * build user object
+     */
+    private function buildUserObj($user_result)
+    {
+        $user = [
+            'id'       => $user_result['data']['id'],
+            'nickname' => $user_result['data']['nickname'] ?? null,
+            'avatar'   => $user_result['data']['avatar'] ?? null,
+            'email'    => (isset($user_result['data']['mail']) and isset($user_result['data']['mail']['value'])) ? $user_result['data']['mail']['value'] : null,
+        ];
         return $user;
+    }
+    
+    /*
+     * get user response by token
+     */
+    protected function getUserByToken($token) 
+    {
+        $api_url = $this->api_uri . '/users/me';
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $api_url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $token));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $response = curl_exec($ch);
+        if (curl_errno($ch)) {
+            return false;
+        }
+        curl_close($ch);
+
+        return json_decode($response, true);
     }
 
     /*
@@ -124,28 +168,19 @@ class Member
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $token));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        $response = json_decode(curl_exec($ch), true);
-        curl_close($ch);
-        
-        return $response;
-        
-    }
-
-    /*
-     * get user response by token
-     */
-    protected function getUserByToken($token) 
-    {
-        $api_url = $this->api_uri . '/users/me';
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $api_url);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $token));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        $response = json_decode(curl_exec($ch), true);
+        $response = curl_exec($ch);
+        if (curl_errno($ch)) {
+            return false;
+        }
         curl_close($ch);
 
-        return $response;
+        $user_result = json_decode($response, true);
+        if ($user_result and $user_result['code'] == 200 and isset($user_result['data'])) {
+            return $this->buildUserObj($user_result);
+        } else {
+            return null;
+        }
+        
     }
     
     /*
@@ -164,12 +199,16 @@ class Member
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
-        $response = json_decode(curl_exec($ch), true);
+        $response = curl_exec($ch);
+        if (curl_errno($ch)) {
+            return false;
+        }
         curl_close($ch);
+        
+        $response = json_decode($response, true);
         if ($response and isset($response['access_token'])) {
             return $response['access_token'];            
         }
-        return null;
     }
     
     /*
@@ -183,10 +222,13 @@ class Member
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $token));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        $response = json_decode(curl_exec($ch), true);
+        $response = curl_exec($ch);
+        if (curl_errno($ch)) {
+            return false;
+        }
         curl_close($ch);
-        
-        return $response;
+
+        return json_decode($response, true);
     
     }
 
@@ -206,11 +248,13 @@ class Member
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $token));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        $response = json_decode(curl_exec($ch), true);
+        $response = curl_exec($ch);
+        if (curl_errno($ch)) {
+            return false;
+        }
         curl_close($ch);
-        
-        return $response;
-        
+
+        return json_decode($response, true);
     }
     
     /**
