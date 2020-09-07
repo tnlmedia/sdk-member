@@ -1,6 +1,6 @@
 <?php
 
-namespace Tnlmedia\Member;
+namespace Tnlmedia\MemberSDK;
 
 class Member
 {
@@ -12,9 +12,11 @@ class Member
     
     protected $redirect_url;
 
-    protected $scope = 'user_basic user_profile';
+    protected $scopes = 'user_basic user_profile';
     
     protected $stateless = false;
+
+    protected $token;
 
     public function __construct($config = [])
     {
@@ -110,12 +112,13 @@ class Member
             return false;
         }
         
-        $token = $this->getAccessTokenResponse($_GET['code']);
-        
-        $user_result = $this->getUserByToken($token);
-        
+        if (!$this->token) {
+            $this->token = $this->getAccessTokenResponse($_GET['code']);
+        }
+
+        $user_result = $this->getUserByToken($this->token);
         if ($user_result and $user_result['code'] == 200 and isset($user_result['data'])) {
-            return $this->buildUserObj($user_result);
+            return array_merge($this->buildUserObj($user_result), ['token' => $this->token]);
         } else {
             return null;
         }
@@ -131,8 +134,23 @@ class Member
             'nickname' => $user_result['data']['nickname'] ?? null,
             'avatar'   => $user_result['data']['avatar'] ?? null,
             'email'    => (isset($user_result['data']['mail']) and isset($user_result['data']['mail']['value'])) ? $user_result['data']['mail']['value'] : null,
+            'mobile'   => (isset($user_result['data']['mobile']) and isset($user_result['data']['mobile']['value'])) ? $user_result['data']['mobile']['value'] : null,
+            'language' => $user_result['data']['language'] ?? null,
+            'timezone' => $user_result['data']['timezone'] ?? null,
+            'status'   => $user_result['data']['status'] ?? null,
+            'created'  => $user_result['data']['created'] ?? null,
         ];
+
         return $user;
+    }
+    
+    /*
+     * set token
+     */
+    public function setToken($token) 
+    {
+        $this->token = $token;
+        return $this;
     }
     
     /*
@@ -257,6 +275,15 @@ class Member
         return json_decode($response, true);
     }
     
+    /**
+     * Set the scopes of the requested access.
+     */
+    public function scopes(array $scopes)
+    {
+        $this->scopes = array_unique(array_merge($this->scopes, $scopes));
+
+        return $this;
+    }
     /**
      * Determine if the current request / session has a mismatching "state".
      */

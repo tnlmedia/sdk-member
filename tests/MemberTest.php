@@ -1,17 +1,31 @@
 <?php
 
-namespace Tnlmedia\Member\Tests;
+namespace Tnlmedia\MemberSDK\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Tnlmedia\Member\Member;
+use Tnlmedia\MemberSDK\Member;
 
-class MemberTest extends TestCase 
+class MemberSDKTest extends TestCase 
 {
-
-
-    public  function testEnvironmentSetUp($app)
+    public function setUp():void 
     {
-        // perform environment setup
+          @session_start();
+          parent::setUp();
+    }
+    public function testRedirect()
+    {
+        $member = new Member($config);
+        $member->redirect();
+        
+    }
+
+    public function testGetUserById()
+    {
+        $config = [
+        ];
+        $member = new Member($config);
+        $user = $member->getUserById(6);
+        $this->assertArrayHasKey('nickname', $user);
     }
 
 }

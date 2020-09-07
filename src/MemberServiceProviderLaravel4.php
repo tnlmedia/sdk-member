@@ -1,6 +1,6 @@
 <?php
 
-namespace Tnlmedia\Member;
+namespace Tnlmedia\MemberSDK;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Http\Response as IlluminateResponse;
@@ -31,6 +31,6 @@ class MemberServiceProviderLaravel4 extends ServiceProvider
             return new Member($app['config']->get('member::config'));
         });
 
-        $app->alias('member', 'TnlMedia\Member\Member');
+        $app->alias('member', 'TnlMedia\MemberSDK\Member');
     }
 }

@@ -16,12 +16,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Tnlmedia\\Member\\": "src/"
+            "Tnlmedia\\MemberSDK\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "TnlMedia\\Member\\Tests\\": "tests/"
+            "TnlMedia\\MemberSDK\\Tests\\": "tests/"
         }
     },
     "scripts": {

@@ -27,7 +27,7 @@ doesn't use laravel
 require 'vendor/autoload.php';
 
 // import the Tnlmedia Member Manager Class
-use Tnlmedia\Member\Member;
+use Tnlmedia\MemberSDK\Member;
 
 // config setting
 $config = [
@@ -41,25 +41,25 @@ $config = [
 $member = new Member($config);
 
 // get oauth redirect url 
-$url = $manager->redirect();
+$url = $member->redirect();
 ```
 
 ### Integration in Laravel
 
 In the $providers array add the service providers for this package.
 ```php
-Tnlmedia\Member\MemberServiceProvider::class
+Tnlmedia\MemberSDK\MemberServiceProvider::class
 ```
 Add the facade of this package to the $aliases array.
 ```php
-'Member' => Tnlmedia\Member\Facades\Member::class
+'Member' => Tnlmedia\MemberSDK\Facades\Member::class
 ```
 
 ### Configuration
 
 Publish configuration in Laravel
 ```shell
-$ php artisan vendor:publish --provider="Tnlmedia\Member\MemberServiceProviderLaravelRecent"
+$ php artisan vendor:publish --provider="Tnlmedia\MemberSDK\MemberServiceProviderLaravelRecent"
 ```
 Publish configuration in Laravel <= 4
 ```shell
@@ -71,6 +71,8 @@ $ php artisan config:publish tnlmedia/member-sdk
 1. Member::redirect()
 
 1. Member::user()
+
+1. Member::setToken(token)
 
 1. Member::getAccessTokenByCerdentials()
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tnlmedia\Member;
+namespace Tnlmedia\MemberSDK;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -22,7 +22,7 @@ class MemberServiceProviderLaravelRecent extends ServiceProvider
             return new Member($this->getMemberConfig($app));
         });
 
-        $app->alias('memeber', 'Tnlmedia\Member\Member');
+        $app->alias('memeber', 'Tnlmedia\MemberSDK\Member');
     }
 
     /**

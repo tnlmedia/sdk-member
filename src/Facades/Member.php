@@ -1,6 +1,6 @@
 <?php
 
-namespace Tnlmedia\Member\Facades;
+namespace Tnlmedia\MemberSDK\Facades;
 
 use Illuminate\Support\Facades\Facade;
 

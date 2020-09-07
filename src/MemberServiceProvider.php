@@ -1,6 +1,6 @@
 <?php
 
-namespace Tnlmedia\Member;
+namespace Tnlmedia\MemberSDK;
 
 use Illuminate\Support\ServiceProvider;
 use Laravel\Lumen\Application as LumenApplication;
@@ -44,11 +44,11 @@ class MemberServiceProvider extends ServiceProvider
     private function getProvider()
     {
         if ($this->app instanceof LumenApplication) {
-            $provider = '\Tnlmedia\Member\MemberServiceProviderLumen';
+            $provider = '\Tnlmedia\MemberSDK\MemberServiceProviderLumen';
         } elseif (version_compare(IlluminateApplication::VERSION, '5.0', '<')) {
-            $provider = '\Tnlmedia\Member\MemberServiceProviderLaravel4';
+            $provider = '\Tnlmedia\MemberSDK\MemberServiceProviderLaravel4';
         } else {
-            $provider = '\Tnlmedia\Member\MemberServiceProviderLaravelRecent';
+            $provider = '\Tnlmedia\MemberSDK\MemberServiceProviderLaravelRecent';
         }
 
         return new $provider($this->app);

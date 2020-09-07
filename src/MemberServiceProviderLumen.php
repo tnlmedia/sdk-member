@@ -1,6 +1,6 @@
 <?php
 
-namespace Tnlmedia\Member;
+namespace Tnlmedia\MemberSDK;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -29,6 +29,6 @@ class MemberServiceProviderLumen extends ServiceProvider
             return new Member($app['config']->get('member'));
         });
 
-        $app->alias('memeber', 'Tnlmedia\Member\Member');
+        $app->alias('memeber', 'Tnlmedia\MemberSDK\Member');
     }
 }
