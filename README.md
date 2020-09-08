@@ -31,6 +31,7 @@ use Tnlmedia\MemberSDK\Member;
 
 // config setting
 $config = [
+    'auth_uri'      => YOUR_TNLMEDIA_MEMBER_AUTH_URI,
     'api_uri'       => YOUR_TNLMEDIA_MEMBER_API_URI,
     'redirect_url'  => YOUR_TNLMEDIA_MEMBER_REDIRECT_URL,
     'client_id'     => YOUR_TNLMEDIA_MEMBER_CLIENT_ID,
@@ -40,8 +41,8 @@ $config = [
 // create an member manager instance 
 $member = new Member($config);
 
-// get oauth redirect url 
-$url = $member->redirect();
+// auth url redirect 
+$member->redirect();
 ```
 
 ### Integration in Laravel
@@ -67,15 +68,20 @@ $ php artisan config:publish tnlmedia/member-sdk
 ```
 
 ### APIs
+1. Member::getAuthUrl()
 
 1. Member::redirect()
 
 1. Member::user()
 
+1. Member::getAccessTokenByCerdentials()
+
 1. Member::setToken(token)
 
-1. Member::getAccessTokenByCerdentials()
+1. Member::setScopes(scopes)
 
 1. Member::getUserById(id)
 
-1. Member::patchUserStatus(id,status)
+1. Member::patchUserStatus(id, status)
+
+1. Member::usersSearch(keyword, options = [])

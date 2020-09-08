@@ -12,19 +12,28 @@ class Member
     
     protected $redirect_url;
 
-    protected $scopes = 'user_basic user_profile';
+    protected $scopes = [];
     
     protected $stateless = false;
 
     protected $token;
+
+    protected $auth_uri;
 
     public function __construct($config = [])
     {
         $this->configure($config);
     }
 
+    /*
+     * config init
+     */
     private function configure($config)
     {
+        if (isset($config['auth_uri'])) {
+            $this->auth_uri = $config['auth_uri'];
+        }
+        
         if (isset($config['api_uri'])) {
             $this->api_uri = $config['api_uri'];
         }
@@ -39,6 +48,10 @@ class Member
         
         if (isset($config['redirect_url'])) {
             $this->redirect_url = $config['redirect_url'];
+        }
+        
+        if (isset($config['scopes'])) {
+            $this->scopes = $config['scopes'];
         }
     }
     
@@ -75,14 +88,14 @@ class Member
     }
 
     /*
-     * login redirect
+     * get login auth url
      */
-    public function redirect() 
+    public function getAuthUrl() 
     {
         $state = null;
 
         if ($this->usesState()) {
-            session_start();
+            @session_start();
             $_SESSION['state'] = $state = $this->getState();
         }
         
@@ -95,8 +108,17 @@ class Member
             $fields['state'] = $state;
         }
 
-        $redirect_url = 'https://greenroom-lista-web1.tnlmedia.com/?'. http_build_query($fields);
-        header('Location: ' . filter_var($redirect_url, FILTER_SANITIZE_URL));
+        $auth_url = $this->auth_uri . '?' . http_build_query($fields);
+        return $auth_url;
+    }
+
+    /*
+     * login redirect
+     */
+    public function redirect()
+    {
+        $auth_url = $this->getAuthUrl();  
+        header('Location: ' . filter_var($auth_url, FILTER_SANITIZE_URL));
     }
     
     /*
@@ -178,13 +200,15 @@ class Member
      */
     public function getUserById($id) 
     {
-        $token = $this->getAccessTokenByCerdentials();
+        if (!$this->token) {
+            $this->token = $this->getAccessTokenByCerdentials();
+        } 
         
         $api_url = $this->api_uri . '/users/' . $id;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $api_url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $token));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $this->token));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $response = curl_exec($ch);
         if (curl_errno($ch)) {
@@ -212,6 +236,10 @@ class Member
             'client_id'     => $this->client_id,
             'client_secret' => $this->client_secret,
         ];
+
+        if (count($this->scopes) > 0) {
+            $post_data['scope'] = implode(' ', $this->scopes);
+        }
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $api_url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
@@ -255,16 +283,20 @@ class Member
      */
     public function patchUserStatus($id, $status = 1) 
     {
-        $token = $this->getAccessTokenByCerdentials();
+        if (!$this->token) {
+            $this->token = $this->getAccessTokenByCerdentials();
+        } 
         
-        $data = ['status' => $status];
+        $data = [
+            'status' => $status,
+        ];
         
         $api_url = $this->api_uri . '/users/' . $id . '/status';
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $api_url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $token));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $this->token));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $response = curl_exec($ch);
         if (curl_errno($ch)) {
@@ -275,10 +307,46 @@ class Member
         return json_decode($response, true);
     }
     
+    /*
+     * search user  
+     */
+    public function usersSearch($keyword, $options = []) 
+    {
+        if (!$this->token) {
+            $this->token = $this->getAccessTokenByCerdentials();
+        } 
+        $data = ['search' => $keyword];
+        
+        if (count($options) > 0) {
+            $data = array_merge($data, $options);
+        } 
+
+        $api_url = $this->api_uri . '/users?' . http_build_query($data);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $api_url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $this->token));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $response = curl_exec($ch);
+        if (curl_errno($ch)) {
+            return false;
+        }
+        curl_close($ch);
+
+        $users_result = json_decode($response, true);
+        if ($users_result and $users_result['code'] == 200 and isset($users_result['data'])) {
+            return $users_result['data'];
+        } else {
+            return null;
+        }
+        return $user_result;
+        
+    }
+    
     /**
      * Set the scopes of the requested access.
      */
-    public function scopes(array $scopes)
+    public function setScopes(array $scopes)
     {
         $this->scopes = array_unique(array_merge($this->scopes, $scopes));
 
@@ -293,7 +361,7 @@ class Member
             return false;
         }
 
-        session_start();
+        @session_start();
 
         $state = $_SESSION['state'];
         

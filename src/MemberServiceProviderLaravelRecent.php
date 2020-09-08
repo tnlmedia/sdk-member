@@ -35,7 +35,6 @@ class MemberServiceProviderLaravelRecent extends ServiceProvider
         $this->publishes([
             __DIR__.'/config.php' => config_path('member.php')
         ]);
-
     }
 
     private function getMemberConfig($app)
