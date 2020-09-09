@@ -1,9 +1,9 @@
 # Member Oauth Libery Package
 
-## Maintener
+## Maintener 
+Ken(ken@sportsv.net) 
 
-Ken (ken@sportsv.net)
-James (james.liu@thenewslens.com)
+James(james.liu@thenewslens.com)
 
 ## Installation
 
