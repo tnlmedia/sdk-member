@@ -281,7 +281,7 @@ class Member
     /*
      * patch token status
      */
-    public function patchUserStatus($id, $status = 1) 
+    public function updateUserStatus($id, $status = 1) 
     {
         if (!$this->token) {
             $this->token = $this->getAccessTokenByCerdentials();
@@ -289,12 +289,13 @@ class Member
         
         $data = [
             'status' => $status,
+            'scope'  => 'user_status',
         ];
         
         $api_url = $this->api_uri . '/users/' . $id . '/status';
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $api_url);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $this->token));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

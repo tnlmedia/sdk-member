@@ -1,6 +1,7 @@
 # Member Oauth Libery Package
 
 ## Maintener
+
 Ken (ken@sportsv.net)
 James (james.liu@thenewslens.com)
 
@@ -80,8 +81,10 @@ $ php artisan config:publish tnlmedia/member-sdk
 
 1. Member::setScopes(scopes)
 
+1. Member::getTokenStatus(token)
+
 1. Member::getUserById(id)
 
-1. Member::patchUserStatus(id, status)
+1. Member::updateUserStatus(id, status)
 
 1. Member::usersSearch(keyword, options = [])
