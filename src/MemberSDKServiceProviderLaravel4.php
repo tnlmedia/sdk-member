@@ -5,7 +5,7 @@ namespace Tnlmedia\MemberSDK;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Http\Response as IlluminateResponse;
 
-class MemberServiceProviderLaravel4 extends ServiceProvider
+class MemberSDKServiceProviderLaravel4 extends ServiceProvider
 {
     /**
      * Bootstrap the application events.
@@ -27,10 +27,10 @@ class MemberServiceProviderLaravel4 extends ServiceProvider
     {
         $app = $this->app;
 
-        $app['member'] = $app->share(function ($app) {
-            return new Member($app['config']->get('member::config'));
+        $app['member-sdk'] = $app->share(function ($app) {
+            return new MemberSDK($app['config']->get('member-sdk::config'));
         });
 
-        $app->alias('member', 'TnlMedia\MemberSDK\Member');
+        $app->alias('member-sdk', 'TnlMedia\MemberSDK\MemberSDK');
     }
 }

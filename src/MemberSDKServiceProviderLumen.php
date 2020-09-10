@@ -4,7 +4,7 @@ namespace Tnlmedia\MemberSDK;
 
 use Illuminate\Support\ServiceProvider;
 
-class MemberServiceProviderLumen extends ServiceProvider
+class MemberSDKServiceProviderLumen extends ServiceProvider
 {
     /**
      * Register the service provider.
@@ -18,17 +18,17 @@ class MemberServiceProviderLumen extends ServiceProvider
         // merge default config
         $this->mergeConfigFrom(
             __DIR__.'/config.php',
-            'member'
+            'member-sdk'
         );
 
         // set configuration
-        $app->configure('member');
+        $app->configure('member-sdk');
 
         // create image
-        $app->singleton('member',function ($app) {
-            return new Member($app['config']->get('member'));
+        $app->singleton('member-sdk',function ($app) {
+            return new MemberSDK($app['config']->get('member-sdk'));
         });
 
-        $app->alias('memeber', 'Tnlmedia\MemberSDK\Member');
+        $app->alias('member-sdk', 'Tnlmedia\MemberSDK\MemberSDK');
     }
 }

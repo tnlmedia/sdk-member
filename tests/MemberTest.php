@@ -3,12 +3,12 @@
 namespace Tnlmedia\MemberSDK\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Tnlmedia\MemberSDK\Member;
+use Tnlmedia\MemberSDK\MemberSDK;
 
 class MemberSDKTest extends TestCase 
 {
     public $config;
-    public $member;
+    public $membersdk;
 
     public function setUp():void 
     {
@@ -16,19 +16,19 @@ class MemberSDKTest extends TestCase
           parent::setUp();
           $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__);
           $this->config = $dotenv->load();
-          $this->member = new Member($this->config);
+          $this->membersdk = new MemberSDK($this->config);
     }
     
 
     public function testGetUserById()
     {
-        $user = $this->member->getUserById(6);
+        $user = $this->membersdk->getUserById(6);
         $this->assertArrayHasKey('nickname', $user);
     }
     
     public function testRedirect()
     {
-        $url = $this->member->getAuthUrl();
+        $url = $this->membersdk->getAuthUrl();
         $this->assertEquals(1, $url);
     }
 

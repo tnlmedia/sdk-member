@@ -4,7 +4,7 @@ namespace Tnlmedia\MemberSDK;
 
 use Illuminate\Support\ServiceProvider;
 
-class MemberServiceProviderLaravelRecent extends ServiceProvider
+class MemberSDKServiceProviderLaravelRecent extends ServiceProvider
 {
     /**
      * Register services.
@@ -16,13 +16,13 @@ class MemberServiceProviderLaravelRecent extends ServiceProvider
         $app = $this->app;
         $this->mergeConfigFrom(
             __DIR__.'/config.php',
-            'member'
+            'member-sdk'
         );
-        $app->singleton('member',function($app){
-            return new Member($this->getMemberConfig($app));
+        $app->singleton('member-sdk',function($app){
+            return new MemberSDK($this->getMemberSDKConfig($app));
         });
 
-        $app->alias('memeber', 'Tnlmedia\MemberSDK\Member');
+        $app->alias('member-sdk', 'Tnlmedia\MemberSDK\MemberSDK');
     }
 
     /**
@@ -33,13 +33,13 @@ class MemberServiceProviderLaravelRecent extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/config.php' => config_path('member.php')
+            __DIR__.'/config.php' => config_path('member-sdk.php')
         ]);
     }
 
-    private function getMemberConfig($app)
+    private function getMemberSDKConfig($app)
     {
-        $config = $app['config']->get('member');
+        $config = $app['config']->get('member-sdk');
 
         if (is_null($config)) {
             return [];

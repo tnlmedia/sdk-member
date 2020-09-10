@@ -2,7 +2,7 @@
 
 namespace Tnlmedia\MemberSDK;
 
-class Member
+class MemberSDK
 {
     protected $api_uri;
     

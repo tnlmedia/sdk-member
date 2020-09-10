@@ -1,4 +1,4 @@
-# Member Oauth Libery Package
+# MemberSDK Libery Package
 
 ## Maintener 
 Ken(ken@sportsv.net) 
@@ -28,7 +28,7 @@ doesn't use laravel
 require 'vendor/autoload.php';
 
 // import the Tnlmedia Member Manager Class
-use Tnlmedia\MemberSDK\Member;
+use Tnlmedia\MemberSDK\MemberSDK;
 
 // config setting
 $config = [
@@ -40,28 +40,28 @@ $config = [
 ];
 
 // create an member manager instance 
-$member = new Member($config);
+$membersdk = new MemberSDK($config);
 
 // auth url redirect 
-$member->redirect();
+$membersdk->redirect();
 ```
 
 ### Integration in Laravel
 
 In the $providers array add the service providers for this package.
 ```php
-Tnlmedia\MemberSDK\MemberServiceProvider::class
+Tnlmedia\MemberSDK\MemberSDKServiceProvider::class
 ```
 Add the facade of this package to the $aliases array.
 ```php
-'Member' => Tnlmedia\MemberSDK\Facades\Member::class
+'MemberSDK' => Tnlmedia\MemberSDK\Facades\MemberSDK::class
 ```
 
 ### Configuration
 
 Publish configuration in Laravel
 ```shell
-$ php artisan vendor:publish --provider="Tnlmedia\MemberSDK\MemberServiceProviderLaravelRecent"
+$ php artisan vendor:publish --provider="Tnlmedia\MemberSDK\MemberSDKServiceProviderLaravelRecent"
 ```
 Publish configuration in Laravel <= 4
 ```shell
@@ -69,22 +69,22 @@ $ php artisan config:publish tnlmedia/member-sdk
 ```
 
 ### APIs
-1. Member::getAuthUrl()
+1. MemberSDK::getAuthUrl()
 
-1. Member::redirect()
+1. MemberSDK::redirect()
 
-1. Member::user()
+1. MemberSDK::user()
 
-1. Member::getAccessTokenByCerdentials()
+1. MemberSDK::getAccessTokenByCerdentials()
 
-1. Member::setToken(token)
+1. MemberSDK::setToken(token)
 
-1. Member::setScopes(scopes)
+1. MemberSDK::setScopes(scopes)
 
-1. Member::getTokenStatus(token)
+1. MemberSDK::getTokenStatus(token)
 
-1. Member::getUserById(id)
+1. MemberSDK::getUserById(id)
 
-1. Member::updateUserStatus(id, status)
+1. MemberSDK::updateUserStatus(id, status)
 
-1. Member::usersSearch(keyword, options = [])
+1. MemberSDK::usersSearch(keyword, options = [])
