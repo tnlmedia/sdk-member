@@ -20,9 +20,10 @@ or
 ```shell
 composer require tnlmedia/member-sdk
 ```
-### Usage
+### Usage 
 
 doesn't use laravel
+#### Init
 ```php
 // include composer autoload
 require 'vendor/autoload.php';
@@ -38,12 +39,32 @@ $config = [
     'client_id'     => YOUR_TNLMEDIA_MEMBER_CLIENT_ID,
     'client_secret' => YOUR_TNLMEDIA_MEMBER_CLIENT_SECRET,
 ];
-
-// create an member manager instance 
+```
+#### Use By Cert Token
+```php
+// create an member sdk instance 
 $membersdk = new MemberSDK($config);
 
-// auth url redirect 
-$membersdk->redirect();
+// Use Cert Token
+$membersdk = $membersdk->initAccess();
+
+// get user by id
+$user = $membersdk->getUserById(1);
+```
+
+#### Use By Auth Login Token
+```php
+// location redirect auth url
+$membersdk->redirect(); 
+
+// get user by auth login callback code 
+$membersdk = membersdk->callback();
+
+// get login user
+$me = $membersdk->getMe();
+
+// get user by id
+$user = $membersdk->getUserById(1);
 ```
 
 ### Integration in Laravel
@@ -68,23 +89,51 @@ Publish configuration in Laravel <= 4
 $ php artisan config:publish tnlmedia/member-sdk 
 ```
 
+### Usage By Laravel
+
+#### Use By Cert Token
+```php
+// Use Cert Token
+$membersdk = MemberSDK::initAccess();
+
+// get user by id
+$user = $membersdk->getUserById(1);
+```
+
+#### Use By Auth Login Token
+```php
+// location redirect auth url
+MemberSDK::redirect(); 
+
+// get user by auth login callback code 
+$membersdk = MemberSDK::callback();
+
+// get login user
+$me = $membersdk->getMe();
+
+// get user by id
+$user = $membersdk->getUserById(1);
+```
+
+
+
 ### APIs
-1. MemberSDK::getAuthUrl()
+1. getAuthUrl()
 
-1. MemberSDK::redirect()
+1. redirect()
 
-1. MemberSDK::user()
+1. callback()
 
-1. MemberSDK::getAccessTokenByCerdentials()
+1. getMe();
 
-1. MemberSDK::setToken(token)
+1. setToken(token)
 
-1. MemberSDK::setScopes(scopes)
+1. setScopes(scopes)
 
-1. MemberSDK::getTokenStatus(token)
+1. getTokenStatus(token)
 
-1. MemberSDK::getUserById(id)
+1. getUserById(id)
 
-1. MemberSDK::updateUserStatus(id, status)
+1. updateUserStatus(id, status)
 
-1. MemberSDK::usersSearch(keyword, options = [])
+1. usersSearch(keyword, options = [])

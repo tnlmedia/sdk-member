@@ -20,6 +20,10 @@ class MemberSDK
 
     protected $auth_uri;
 
+    protected $stage = false;
+
+    protected $me;
+
     public function __construct($config = [])
     {
         $this->configure($config);
@@ -54,7 +58,16 @@ class MemberSDK
             $this->scopes = $config['scopes'];
         }
     }
-    
+
+    /*
+     * init
+     */
+    public function initAccess()
+    {
+        $this->token = $this->getAccessTokenByCerdentials();
+        return $this;
+    }
+
     /*
      * get token by code
      */
@@ -124,7 +137,7 @@ class MemberSDK
     /*
      * get user by auth login
      */
-    public function user()
+    public function callback()
     {
         if (!isset($_GET['code'])) {
             return false;
@@ -134,22 +147,21 @@ class MemberSDK
             return false;
         }
         
-        if (!$this->token) {
-            $this->token = $this->getAccessTokenResponse($_GET['code']);
-        }
+        $this->token = $this->getAccessTokenResponse($_GET['code']);
 
         $user_result = $this->getUserByToken($this->token);
+
         if ($user_result and $user_result['code'] == 200 and isset($user_result['data'])) {
-            return array_merge($this->buildUserObj($user_result), ['token' => $this->token]);
-        } else {
-            return null;
+            $this->me = $this->buildUserObj($user_result, ['token' => $this->token]);
         }
+
+        return $this;
     }
 
     /*
      * build user object
      */
-    private function buildUserObj($user_result)
+    private function buildUserObj($user_result, $added = [])
     {
         $user = [
             'id'       => $user_result['data']['id'],
@@ -162,8 +174,19 @@ class MemberSDK
             'status'   => $user_result['data']['status'] ?? null,
             'created'  => $user_result['data']['created'] ?? null,
         ];
+        if (count($added) > 0) {
+            $user = array_merge($user, $added);
+        }
 
-        return $user;
+        return (object) $user;
+    }
+    
+    /*
+     * get me 
+     */
+    public function getMe( 
+    {
+        return $this->me;
     }
     
     /*
@@ -173,6 +196,38 @@ class MemberSDK
     {
         $this->token = $token;
         return $this;
+    }
+    
+    /*
+     * get token by Cerdentials
+     */
+    private function getAccessTokenByCerdentials()
+    {
+        $api_url = $this->api_uri . '/token';
+        $post_data = [
+            'grant_type'    => 'client_credentials',
+            'client_id'     => $this->client_id,
+            'client_secret' => $this->client_secret,
+        ];
+
+        if (count($this->scopes) > 0) {
+            $post_data['scope'] = implode(' ', $this->scopes);
+        }
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $api_url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+        $response = curl_exec($ch);
+        if (curl_errno($ch)) {
+            return false;
+        }
+        curl_close($ch);
+        
+        $response = json_decode($response, true);
+        if ($response and isset($response['access_token'])) {
+            return $response['access_token'];            
+        }
     }
     
     /*
@@ -225,37 +280,6 @@ class MemberSDK
         
     }
     
-    /*
-     * get token by Cerdentials
-     */
-    public function getAccessTokenByCerdentials()
-    {
-        $api_url = $this->api_uri . '/token';
-        $post_data = [
-            'grant_type'    => 'client_credentials',
-            'client_id'     => $this->client_id,
-            'client_secret' => $this->client_secret,
-        ];
-
-        if (count($this->scopes) > 0) {
-            $post_data['scope'] = implode(' ', $this->scopes);
-        }
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $api_url);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
-        $response = curl_exec($ch);
-        if (curl_errno($ch)) {
-            return false;
-        }
-        curl_close($ch);
-        
-        $response = json_decode($response, true);
-        if ($response and isset($response['access_token'])) {
-            return $response['access_token'];            
-        }
-    }
     
     /*
      * get token status
