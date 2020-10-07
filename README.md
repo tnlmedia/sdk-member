@@ -9,7 +9,7 @@ James(james.liu@thenewslens.com)
 
 ### System Requirements
 
-- PHP >= 5.0
+- PHP >= 7.0
 
 ### Composer Installation
 
