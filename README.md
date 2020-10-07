@@ -9,7 +9,7 @@ James(james.liu@thenewslens.com)
 
 ### System Requirements
 
-- PHP >= 7.0
+- PHP >= 5.0
 
 ### Composer Installation
 
@@ -33,11 +33,9 @@ use Tnlmedia\MemberSDK\MemberSDK;
 
 // config setting
 $config = [
-    'auth_uri'      => YOUR_TNLMEDIA_MEMBER_AUTH_URI,
-    'api_uri'       => YOUR_TNLMEDIA_MEMBER_API_URI,
-    'redirect_url'  => YOUR_TNLMEDIA_MEMBER_REDIRECT_URL,
     'client_id'     => YOUR_TNLMEDIA_MEMBER_CLIENT_ID,
     'client_secret' => YOUR_TNLMEDIA_MEMBER_CLIENT_SECRET,
+    'redirect_url'  => YOUR_TNLMEDIA_MEMBER_REDIRECT_URL,
 ];
 ```
 #### Use By Cert Token
@@ -47,24 +45,41 @@ $membersdk = new MemberSDK($config);
 
 // Use Cert Token
 $membersdk = $membersdk->initAccess();
-
-// get user by id
-$user = $membersdk->getUserById(1);
 ```
 
 #### Use By Auth Login Token
 ```php
+// create an member sdk instance 
+$membersdk = new MemberSDK($config);
+
 // location redirect auth url
 $membersdk->redirect(); 
 
 // get user by auth login callback code 
 $membersdk = membersdk->callback();
 
-// get login user
+// get current user
 $me = $membersdk->getMe();
 
-// get user by id
-$user = $membersdk->getUserById(1);
+```
+
+#### Environment
+
+```php
+// Production
+$membersdk->onProduction();
+
+// Stage
+$membersdk->onStage();
+```
+
+### Debug
+```php
+// Enable
+$membersdk->enableDebug();
+
+// Disable
+$membersdk->disableDebug();
 ```
 
 ### Integration in Laravel
@@ -95,45 +110,51 @@ $ php artisan config:publish tnlmedia/member-sdk
 ```php
 // Use Cert Token
 $membersdk = MemberSDK::initAccess();
-
-// get user by id
-$user = $membersdk->getUserById(1);
 ```
 
 #### Use By Auth Login Token
 ```php
-// location redirect auth url
+// location auth redirect 
 MemberSDK::redirect(); 
 
-// get user by auth login callback code 
+// get callback code 
 $membersdk = MemberSDK::callback();
-
-// get login user
-$me = $membersdk->getMe();
-
-// get user by id
-$user = $membersdk->getUserById(1);
 ```
 
 
 
 ### APIs
-1. getAuthUrl()
+```php
+// get auth url
+$membersdk->getAuthUrl()
 
-1. redirect()
+// location auth redirect
+$membersdk->redirect()
 
-1. callback()
+// get callback code
+$membersdk->callback()
 
-1. getMe();
+// get current user
+$membersdk->getMe();
 
-1. setToken(token)
+// get current user from token
+$membersdk->getMeFromToken(token);
 
-1. setScopes(scopes)
+// set token
+$membersdk->setToken(token)
 
-1. getTokenStatus(token)
+// set scopes
+$membersdk->setScopes(scopes)
 
-1. getUserById(id)
+// get token status
+$membersdk->getTokenStatus(token)
 
-1. updateUserStatus(id, status)
+// get user by user id
+$membersdk->getUserById(id)
 
-1. usersSearch(keyword, options = [])
+// update user status
+$membersdk->updateUserStatus(id, status)
+
+// search user
+$membersdk->usersSearch(keyword, options = [])
+```
