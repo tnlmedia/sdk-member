@@ -20,68 +20,6 @@ or
 ```shell
 composer require tnlmedia/member-sdk
 ```
-### Usage 
-
-doesn't use laravel
-#### Init
-```php
-// include composer autoload
-require 'vendor/autoload.php';
-
-// import the Tnlmedia Member Manager Class
-use Tnlmedia\MemberSDK\MemberSDK;
-
-// config setting
-$config = [
-    'client_id'     => YOUR_TNLMEDIA_MEMBER_CLIENT_ID,
-    'client_secret' => YOUR_TNLMEDIA_MEMBER_CLIENT_SECRET,
-    'redirect_url'  => YOUR_TNLMEDIA_MEMBER_REDIRECT_URL,
-];
-```
-#### Use By Cert Token
-```php
-// create an member sdk instance 
-$membersdk = new MemberSDK($config);
-
-// Use Cert Token
-$membersdk = $membersdk->initAccess();
-```
-
-#### Use By Auth Login Token
-```php
-// create an member sdk instance 
-$membersdk = new MemberSDK($config);
-
-// location redirect auth url
-$membersdk->redirect(); 
-
-// get user by auth login callback code 
-$membersdk = membersdk->callback();
-
-// get current user
-$me = $membersdk->getMe();
-
-```
-
-#### Environment
-
-```php
-// Production
-$membersdk->onProduction();
-
-// Stage
-$membersdk->onStage();
-```
-
-### Debug
-```php
-// Enable
-$membersdk->enableDebug();
-
-// Disable
-$membersdk->disableDebug();
-```
-
 ### Integration in Laravel
 
 In the $providers array add the service providers for this package.
@@ -114,12 +52,78 @@ $membersdk = MemberSDK::initAccess();
 
 #### Use By Auth Login Token
 ```php
+use MemberSDK;
+
 // location auth redirect 
 MemberSDK::redirect(); 
 
 // get callback code 
 $membersdk = MemberSDK::callback();
 ```
+
+
+
+### Integration Without Laravel
+
+#### Init
+```php
+// include composer autoload
+require 'vendor/autoload.php';
+
+// import the Tnlmedia Member Manager Class
+use Tnlmedia\MemberSDK\MemberSDK;
+
+// config setting
+$config = [
+    'client_id'     => TNLMEDIA_MEMBER_CLIENT_ID,
+    'client_secret' => TNLMEDIA_MEMBER_CLIENT_SECRET,
+    'redirect_url'  => TNLMEDIA_MEMBER_REDIRECT_URL,
+];
+```
+#### Use By Cert Token
+```php
+// create an member sdk instance 
+$membersdk = new MemberSDK($config);
+
+// Use Cert Token
+$membersdk = $membersdk->initAccess();
+```
+
+#### Use By Auth Login Token
+```php
+// create an member sdk instance 
+$membersdk = new MemberSDK($config);
+
+// location redirect auth url
+$membersdk->redirect(); 
+
+// get user by auth login callback code 
+$membersdk = membersdk->callback();
+
+// get current user
+$me = $membersdk->getMe();
+
+```
+
+### Environment
+
+```php
+// Production
+$membersdk->onProduction();
+
+// Stage
+$membersdk->onStage();
+```
+
+### Debug
+```php
+// Enable
+$membersdk->enableDebug();
+
+// Disable
+$membersdk->disableDebug();
+```
+
 
 
 
