@@ -336,22 +336,12 @@ class MemberSDK
      */
     private function buildUserObj($user_result, $added = [])
     {
-        $user = [
-            'id'       => $user_result['data']['id'],
-            'nickname' => $user_result['data']['nickname'] ?? null,
-            'avatar'   => $user_result['data']['avatar'] ?? null,
-            'email'    => (isset($user_result['data']['mail']) and isset($user_result['data']['mail']['value'])) ? $user_result['data']['mail']['value'] : null,
-            'mobile'   => (isset($user_result['data']['mobile']) and isset($user_result['data']['mobile']['value'])) ? $user_result['data']['mobile']['value'] : null,
-            'language' => $user_result['data']['language'] ?? null,
-            'timezone' => $user_result['data']['timezone'] ?? null,
-            'status'   => $user_result['data']['status'] ?? null,
-            'created'  => $user_result['data']['created'] ?? null,
-        ];
+        $user = $user_result['data'];
         if (count($added) > 0) {
             $user = array_merge($user, $added);
         }
 
-        return (object) $user;
+        return json_decode(json_encode($user));
     }
     
     
