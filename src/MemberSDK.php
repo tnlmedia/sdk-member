@@ -190,6 +190,17 @@ class MemberSDK
         $auth_url = $this->getAuthUrl();  
         header('Location: ' . filter_var($auth_url, FILTER_SANITIZE_URL));
     }
+
+    public function setRedirectUri($uri) 
+    {
+        $this->redirect_url = $uri;
+        return $this;
+    }
+    
+    public function getRedirectUri() 
+    {
+        return $this->redirect_url;
+    }
     
     /*
      * Get call code by auth login
