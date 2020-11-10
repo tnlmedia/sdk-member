@@ -191,13 +191,19 @@ class MemberSDK
         header('Location: ' . filter_var($auth_url, FILTER_SANITIZE_URL));
     }
 
-    public function setRedirectUri($uri) 
+    /*
+     * Set redirect uri
+     */
+    public function setRedirectUri($uri)
     {
         $this->redirect_url = $uri;
         return $this;
     }
     
-    public function getRedirectUri() 
+    /*
+     * Get redirect uri
+     */
+    public function getRedirectUri()
     {
         return $this->redirect_url;
     }
