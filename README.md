@@ -28,7 +28,7 @@ Tnlmedia\MemberSDK\MemberSDKServiceProvider::class
 ```
 Add the facade of this package to the $aliases array.
 ```php
-'MemberSDK' => Tnlmedia\MemberSDK\Facades\MemberSDK::class
+'MemberSDK' => Tnlmedia\MemberSDK\MemberSDKFacade::class
 ```
 
 ### Configuration

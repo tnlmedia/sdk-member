@@ -17,7 +17,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Tnlmedia\\MemberSDK\\": "src/"
+            "Tnlmedia\\MemberSDK\\": "src"
         }
     },
     "autoload-dev": {

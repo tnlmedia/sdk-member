@@ -1,10 +1,10 @@
 <?php
 
-namespace Tnlmedia\MemberSDK\Facades;
+namespace Tnlmedia\MemberSDK;
 
 use Illuminate\Support\Facades\Facade;
 
-class MemberSDK extends Facade
+class MemberSDKFacade extends Facade
 {
     protected static function getFacadeAccessor()
     {
