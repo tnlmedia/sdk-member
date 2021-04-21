@@ -1,43 +1,54 @@
-# MemberSDK Libery Package
+# Member API PHP SDK
 
-## Maintener 
-Ken(ken@sportsv.net) 
+## Maintainer
 
-James(james.liu@thenewslens.com)
+James (james.liu@thenewslens.com)  
+Ken (ken@sportsv.net)
 
-## Installation
+## Install
 
-### System Requirements
-
-- PHP >= 7.0
-
-### Composer Installation
-
-```shell
-php composer.phar require tnlmedia/member-sdk
-```
-or
 ```shell
 composer require tnlmedia/member-sdk
 ```
-### Integration in Laravel
 
-In the $providers array add the service providers for this package.
+### Laravel integration
+
+Laravel will automatically register, you don't need to do anything.
+
+(TBD)
+(TBD)
+(TBD)
+
+## Usage
 ```php
-Tnlmedia\MemberSDK\MemberSDKServiceProvider::class
+// Config
+$config = [
+    'console_id' => 1,      // Belongs console ID
+    'client_id' => 1,       // Client ID
+    'client_secret' => '',  // Client secret key
+    'redirect_uri' => '',   // OAuth redirect full url
+];
+$sdk = new \TNLMedia\MemberSDK\MemberSDK($config);
 ```
-Add the facade of this package to the $aliases array.
+
+### Authorize
 ```php
-'MemberSDK' => Tnlmedia\MemberSDK\MemberSDKFacade::class
+// Get access token (Credentials)
 ```
+
+
+
 
 ### Configuration
 
 Publish configuration in Laravel
+
 ```shell
 $ php artisan vendor:publish --provider="Tnlmedia\MemberSDK\MemberSDKServiceProviderLaravelRecent"
 ```
+
 Publish configuration in Laravel <= 4
+
 ```shell
 $ php artisan config:publish tnlmedia/member-sdk 
 ```
@@ -45,12 +56,14 @@ $ php artisan config:publish tnlmedia/member-sdk
 ### Usage By Laravel
 
 #### Use By Cert Token
+
 ```php
 // Use Cert Token
 $membersdk = MemberSDK::initAccess();
 ```
 
 #### Use By Auth Login Token
+
 ```php
 use MemberSDK;
 
@@ -61,11 +74,10 @@ MemberSDK::redirect();
 $membersdk = MemberSDK::callback();
 ```
 
-
-
 ### Integration Without Laravel
 
 #### Init
+
 ```php
 // include composer autoload
 require 'vendor/autoload.php';
@@ -80,7 +92,9 @@ $config = [
     'redirect_url'  => TNLMEDIA_MEMBER_REDIRECT_URL,
 ];
 ```
+
 #### Use By Cert Token
+
 ```php
 // create an member sdk instance 
 $membersdk = new MemberSDK($config);
@@ -90,6 +104,7 @@ $membersdk = $membersdk->initAccess();
 ```
 
 #### Use By Auth Login Token
+
 ```php
 // create an member sdk instance 
 $membersdk = new MemberSDK($config);
@@ -116,6 +131,7 @@ $membersdk->onStage();
 ```
 
 ### Debug
+
 ```php
 // Enable
 $membersdk->enableDebug();
@@ -124,10 +140,8 @@ $membersdk->enableDebug();
 $membersdk->disableDebug();
 ```
 
-
-
-
 ### APIs
+
 ```php
 // get auth url
 $membersdk->getAuthUrl()
