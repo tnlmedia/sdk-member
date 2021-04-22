@@ -23,10 +23,12 @@ Laravel will automatically register, you don't need to do anything.
 ```php
 // Config
 $config = [
-    'console_id' => 1,      // Belongs console ID
-    'client_id' => 1,       // Client ID
-    'client_secret' => '',  // Client secret key
-    'redirect_uri' => '',   // OAuth redirect full url
+    'environment' => 'production',  // API environment
+    'version' => '1',               // API version
+    'console_id' => 1,              // Belongs console ID
+    'client_id' => 1,               // Client ID
+    'client_secret' => '',          // Client secret key
+    'redirect_uri' => '',           // OAuth redirect full url
 ];
 $sdk = new \TNLMedia\MemberSDK\MemberSDK($config);
 ```
