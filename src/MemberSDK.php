@@ -367,6 +367,7 @@ class MemberSDK
             $token = $this->authorize->status($token);
             $this->token = $token;
         } catch (Throwable $e) {
+            $this->token = null;
         }
         return $this;
     }

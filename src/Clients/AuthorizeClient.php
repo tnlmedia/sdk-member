@@ -34,13 +34,12 @@ class AuthorizeClient extends Client
         $parameters['code'] = $code;
         $result = $this->core->request('token', $parameters, 'POST');
 
-        // Token node
+        // Build
         $token = new AccessToken($result);
         $this->status($token);
 
         // Put core
         $this->core->setToken($token);
-
         return $token;
     }
 
@@ -76,13 +75,12 @@ class AuthorizeClient extends Client
         }
         $result = $this->core->request('token', $parameters, 'POST');
 
-        // Token node
+        // Build
         $token = new AccessToken($result);
         $this->status($token);
 
         // Put core
         $this->core->setToken($token);
-
         return $token;
     }
 
@@ -107,12 +105,11 @@ class AuthorizeClient extends Client
         // Request
         $result = $this->core->request('token');
 
-        // Token node
+        // Update
         $result['token_type'] = $token->getType();
         $result['expires_in'] = $token->getExpire()->getTimestamp();
         $result['access_token'] = $token->getToken();
         $token->initial($result);
-
         return $token;
     }
 }

@@ -4,23 +4,8 @@ namespace TNLMedia\MemberSDK\Nodes;
 
 use DateTime;
 
-class AccessToken implements NodeInterface
+class AccessToken extends Node
 {
-    /**
-     * Token attributes
-     *
-     * @var array
-     */
-    protected $attributes = [];
-
-    /**
-     * {@inheritDoc}
-     */
-    public function __construct(array $attributes = [])
-    {
-        $this->initial($attributes);
-    }
-
     /**
      * Convert to header string
      *
@@ -32,44 +17,13 @@ class AccessToken implements NodeInterface
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function initial(array $attributes = [])
-    {
-        $this->attributes = [];
-
-        // Basic
-        $this->attributes['type'] = strval($attributes['token_type'] ?? 'Bearer');
-        $this->attributes['expire'] = new DateTime();
-        $this->attributes['expire'] = $this->attributes['expire']
-            ->setTimestamp(intval($attributes['expires_in'] ?? ''));
-        $this->attributes['token'] = strval($attributes['access_token'] ?? '');
-
-        // Scopes
-        $this->attributes['scopes'] = $attributes['scopes'] ?? [];
-        $this->attributes['scopes'] = is_array($this->attributes['scopes']) ? $this->attributes['scopes'] : [];
-        foreach ($this->attributes['scopes'] as $key => $value) {
-            $this->attributes['scopes'][$key] = strval($value);
-        }
-        $this->attributes['scopes'] = array_values($this->attributes['scopes']);
-
-        // Console
-        $this->attributes['console'] = $attributes['console'] ?? [];
-
-        // User
-        $this->attributes['user'] = $attributes['user'] ?? [];
-
-        return $this;
-    }
-
-    /**
      * Token type
      *
      * @return string
      */
     public function getType()
     {
-        return strval($this->attributes['type'] ?? 'Bearer');
+        return $this->getStringAttributes('token_type', 'Bearer');
     }
 
     /**
@@ -79,7 +33,10 @@ class AccessToken implements NodeInterface
      */
     public function getExpire()
     {
-        return $this->attributes['expire'] ?? new DateTime();
+        /** @var DateTime $value */
+        $value = new DateTime();
+        $value->setTimestamp($this->getIntegerAttributes('expires_in'));
+        return $value;
     }
 
     /**
@@ -89,7 +46,7 @@ class AccessToken implements NodeInterface
      */
     public function getToken()
     {
-        return strval($this->attributes['token'] ?? '');
+        return $this->getStringAttributes('access_token');
     }
 
     /**
@@ -109,7 +66,11 @@ class AccessToken implements NodeInterface
      */
     public function getScopes()
     {
-        return (array)$this->attributes['scopes'];
+        $value = (array)$this->getAttributes('scopes', []);
+        foreach ($value as $key => $item) {
+            $value[$key] = strval($item);
+        }
+        return array_values($value);
     }
 
     /**
@@ -119,7 +80,7 @@ class AccessToken implements NodeInterface
      */
     public function getConsole()
     {
-        return (array)$this->attributes['console'];
+        return $this->getArrayAttributes('console');
     }
 
     /**
@@ -129,7 +90,7 @@ class AccessToken implements NodeInterface
      */
     public function getConsoleID()
     {
-        return intval($this->attributes['console']['console_id'] ?? 0);
+        return $this->getIntegerAttributes('console.console_id');
     }
 
     /**
@@ -139,7 +100,7 @@ class AccessToken implements NodeInterface
      */
     public function getUser()
     {
-        return (array)$this->attributes['user'];
+        return $this->getArrayAttributes('user');
     }
 
     /**
@@ -149,7 +110,7 @@ class AccessToken implements NodeInterface
      */
     public function getUserID()
     {
-        return intval($this->attributes['user']['id'] ?? 0);
+        return $this->getIntegerAttributes('user.id');
     }
 
     /**
@@ -159,7 +120,7 @@ class AccessToken implements NodeInterface
      */
     public function getUserMail()
     {
-        return strval($this->attributes['user']['mail'] ?? '');
+        return $this->getStringAttributes('user.mail');
     }
 
     /**
@@ -169,7 +130,7 @@ class AccessToken implements NodeInterface
      */
     public function getUserAvatar()
     {
-        return strval($this->attributes['user']['avatar'] ?? '');
+        return $this->getStringAttributes('user.avatar');
     }
 
     /**
