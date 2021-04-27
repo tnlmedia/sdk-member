@@ -127,12 +127,14 @@ class MemberSDK
         }
 
         if (isset($config['redirect_uri'])) {
-            $this->setDefaultRedirect(intval($config['redirect_uri']));
+            $this->setDefaultRedirect(strval($config['redirect_uri']));
         }
 
         if (isset($config['access_token'])) {
             if ($config['access_token'] instanceof AccessToken) {
                 $this->setToken($config['access_token']);
+            } elseif (is_string($config['access_token'])) {
+                $this->setTokenString($config['access_token']);
             }
         }
     }
@@ -146,15 +148,13 @@ class MemberSDK
     public function __get(string $name)
     {
         // Get client
-        $this->initClient($name);
-        if (isset($this->clients[$name])) {
-            return $this->clients[$name];
+        if ($client = $this->getClient($name)) {
+            return $client;
         }
 
         // Get helper
-        $this->initHelper($name);
-        if (isset($this->helpers[$name])) {
-            return $this->helpers[$name];
+        if ($helper = $this->getHelper($name)) {
+            return $helper;
         }
 
         // Error
@@ -168,49 +168,53 @@ class MemberSDK
     }
 
     /**
-     * Initial client into property
+     * Initial client into property and return
      *
      * @param string $name
+     * @return mixed|null
      */
-    protected function initClient(string $name)
+    protected function getClient(string $name)
     {
         // Check exists
         $key = strtolower($name);
-        if ($this->services[$key]) {
-            return;
+        if (isset($this->clients[$key])) {
+            return $this->clients[$key];
         }
 
         // Check class
-        $namespace = __NAMESPACE__ . '\\' . ucfirst($key) . 'Client';
+        $namespace = __NAMESPACE__ . '\\Clients\\' . ucfirst($key) . 'Client';
         if (!is_subclass_of($namespace, Client::class)) {
-            return;
+            return null;
         }
 
         // Initial
         $this->clients[$key] = new $namespace($this);
+        return $this->clients[$key];
     }
 
     /**
-     * Initial helper into property
+     * Initial helper into property and return
      *
      * @param string $name
+     * @return mixed|null
      */
-    protected function initHelper(string $name)
+    protected function getHelper(string $name)
     {
         // Check exists
         $key = strtolower($name);
-        if ($this->helpers[$key]) {
-            return;
+        if (isset($this->helpers[$key])) {
+            return $this->helpers[$key];
         }
 
         // Check class
-        $namespace = __NAMESPACE__ . '\\' . ucfirst($key) . 'Helper';
+        $namespace = __NAMESPACE__ . '\\Helpers\\' . ucfirst($key) . 'Helper';
         if (!is_subclass_of($namespace, Helper::class)) {
-            return;
+            return null;
         }
 
         // Initial
         $this->helpers[$key] = new $namespace($this);
+        return $this->helpers[$key];
     }
 
     /**
@@ -418,6 +422,17 @@ class MemberSDK
                 'json' => (strtolower($method) != 'get') ? $parameters : null,
                 'query' => (strtolower($method) == 'get') ? $parameters : null,
                 'timeout' => 30,
+                'http_errors' => false,
+            ]);
+            var_dump($method, $this->buildRequestUrl($path), [
+                'headers' => [
+                    'Accept' => 'application/json',
+                ],
+                'auth' => $this->getToken() ? (string)$this->getToken() : null,
+                'json' => (strtolower($method) != 'get') ? $parameters : null,
+                'query' => (strtolower($method) == 'get') ? $parameters : null,
+                'timeout' => 30,
+                'http_errors' => false,
             ]);
 
             // Check status
@@ -427,7 +442,10 @@ class MemberSDK
 
             // Response
             $response = json_decode($result->getBody()->getContents(), true);
-            if (($response['code'] ?? 0) == 200) {
+            if (!array_key_exists('code', $response)) {
+                return $response;
+            }
+            if ($response['code'] == 200) {
                 return $response['data'] ?? [];
             }
 

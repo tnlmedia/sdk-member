@@ -13,6 +13,7 @@ class AccessToken extends Node
      */
     public function __toString()
     {
+        var_dump('xxxx');
         return $this->getHeaderToken();
     }
 

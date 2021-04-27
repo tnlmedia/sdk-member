@@ -36,10 +36,12 @@ class AuthorizeClient extends Client
 
         // Build
         $token = new AccessToken($result);
-        $this->status($token);
 
         // Put core
         $this->core->setToken($token);
+
+        // Token detail
+        $this->status($token);
         return $token;
     }
 
@@ -63,7 +65,7 @@ class AuthorizeClient extends Client
     {
         // Request
         $parameters = [];
-        $parameters['grant_type'] = 'authorization_code';
+        $parameters['grant_type'] = 'client_credentials';
         $parameters['client_id'] = $this->core->getClientID();
         $parameters['client_secret'] = $this->core->getClientSecret();
         if (!empty($scopes)) {
@@ -77,10 +79,12 @@ class AuthorizeClient extends Client
 
         // Build
         $token = new AccessToken($result);
-        $this->status($token);
 
         // Put core
         $this->core->setToken($token);
+
+        // Token detail
+        $this->status($token);
         return $token;
     }
 

@@ -36,7 +36,7 @@
         }
     },
     "scripts": {
-        "test": "phpunit",
+        "test": "phpunit tests",
         "check-style": "phpcs src tests",
         "fix-style": "phpcbf src tests"
     }
