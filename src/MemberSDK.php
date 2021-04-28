@@ -361,18 +361,10 @@ class MemberSDK
     {
         // Simple token
         $token = new AccessToken([
-            'expires_in' => time() + 600,
+            'expires_in' => 600,
             'access_token' => $token_string,
-        ]);
+        ], $this);
         $this->token = $token;
-
-        // Get token detail
-        try {
-            $token = $this->authorize->status($token);
-            $this->token = $token;
-        } catch (Throwable $e) {
-            $this->token = null;
-        }
         return $this;
     }
 
@@ -417,18 +409,8 @@ class MemberSDK
             $result = $client->request($method, $this->buildRequestUrl($path), [
                 'headers' => [
                     'Accept' => 'application/json',
+                    'Authorization' => $this->getToken() ? (string)$this->getToken() : null,
                 ],
-                'auth' => $this->getToken() ? (string)$this->getToken() : null,
-                'json' => (strtolower($method) != 'get') ? $parameters : null,
-                'query' => (strtolower($method) == 'get') ? $parameters : null,
-                'timeout' => 30,
-                'http_errors' => false,
-            ]);
-            var_dump($method, $this->buildRequestUrl($path), [
-                'headers' => [
-                    'Accept' => 'application/json',
-                ],
-                'auth' => $this->getToken() ? (string)$this->getToken() : null,
                 'json' => (strtolower($method) != 'get') ? $parameters : null,
                 'query' => (strtolower($method) == 'get') ? $parameters : null,
                 'timeout' => 30,

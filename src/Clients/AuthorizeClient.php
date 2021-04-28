@@ -35,13 +35,10 @@ class AuthorizeClient extends Client
         $result = $this->core->request('token', $parameters, 'POST');
 
         // Build
-        $token = new AccessToken($result);
+        $token = new AccessToken($result, $this->core);
 
         // Put core
         $this->core->setToken($token);
-
-        // Token detail
-        $this->status($token);
         return $token;
     }
 
@@ -78,13 +75,10 @@ class AuthorizeClient extends Client
         $result = $this->core->request('token', $parameters, 'POST');
 
         // Build
-        $token = new AccessToken($result);
+        $token = new AccessToken($result, $this->core);
 
         // Put core
         $this->core->setToken($token);
-
-        // Token detail
-        $this->status($token);
         return $token;
     }
 

@@ -11,18 +11,11 @@ use TNLMedia\MemberSDK\Nodes\AccessToken;
 class AuthorizeTest extends TestCase
 {
     /**
-     * @var MemberSDK
-     */
-    protected $sdk;
-
-    /**
-     * AuthorizeTest constructor.
+     * Build SDK
      *
-     * @param string|null $namei
-     * @param array $data
-     * @param string $dataName
+     * @return MemberSDK
      */
-    public function __construct(string $name = null, array $data = [], $dataName = '')
+    public function testSdk()
     {
         $dotenv = Dotenv::createImmutable(__DIR__ . '/..');
         $dotenv->load();
@@ -34,31 +27,87 @@ class AuthorizeTest extends TestCase
         $config['client_id'] = $_ENV['CLIENT_ID'];
         $config['client_secret'] = $_ENV['CLIENT_SECRET'];
         $config['redirect_uri'] = $_ENV['REDIRECT_URI'];
-        $this->sdk = new MemberSDK($config);
+        $sdk = new MemberSDK($config);
+        $this->assertTrue($sdk instanceof MemberSDK);
 
-        parent::__construct($name, $data, $dataName);
+        return $sdk;
     }
 
-    public function testAuthCode()
+    /**
+     * Auth code token
+     *
+     * @depends testSdk
+     * @param MemberSDK $sdk
+     * @return MemberSDK
+     * @throws Exception
+     * @throws \TNLMedia\MemberSDK\Exceptions\AuthorizeException
+     * @throws \TNLMedia\MemberSDK\Exceptions\DuplicateException
+     * @throws \TNLMedia\MemberSDK\Exceptions\FormatException
+     * @throws \TNLMedia\MemberSDK\Exceptions\NotFoundException
+     * @throws \TNLMedia\MemberSDK\Exceptions\ProtectedException
+     * @throws \TNLMedia\MemberSDK\Exceptions\RequestException
+     * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
+     * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
+     * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
+     */
+    public function testAuthCode(MemberSDK $sdk)
     {
         $this->expectException(Exception::class);
-        $this->sdk->authorize->authCode('test', getenv('REDIRECT_URI'));
+        $sdk->authorize->authCode('test', getenv('REDIRECT_URI'));
         sleep(1);
+        return $sdk;
     }
 
-    public function testCredential()
+    /**
+     * Credential token
+     *
+     * @depends testSdk
+     * @param MemberSDK $sdk
+     * @return MemberSDK
+     * @throws Exception
+     * @throws \TNLMedia\MemberSDK\Exceptions\AuthorizeException
+     * @throws \TNLMedia\MemberSDK\Exceptions\DuplicateException
+     * @throws \TNLMedia\MemberSDK\Exceptions\FormatException
+     * @throws \TNLMedia\MemberSDK\Exceptions\NotFoundException
+     * @throws \TNLMedia\MemberSDK\Exceptions\ProtectedException
+     * @throws \TNLMedia\MemberSDK\Exceptions\RequestException
+     * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
+     * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
+     * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
+     */
+    public function testCredential(MemberSDK $sdk)
     {
-        $token = $this->sdk->authorize->credential();
-        $this->assertContainsOnlyInstancesOf(AccessToken::class, [$token]);
+        $sdk->authorize->credential();
+        $this->assertTrue($sdk->getToken() instanceof AccessToken);
         sleep(1);
-        var_dump($token);
-        return $token;
+        return $sdk;
     }
 
-    public function testTokenString($token = null)
+    /**
+     * Token by string
+     *
+     * @depends testCredential
+     * @param MemberSDK $sdk
+     * @return MemberSDK
+     */
+    public function testTokenString(MemberSDK $sdk)
     {
-        var_dump($token);
-//        $token = $this->sdk->setTokenString($token->getToken());
+        $sdk->setTokenString($sdk->getToken()->getToken());
+        $this->assertTrue($sdk->getToken() instanceof AccessToken);
+        sleep(1);
+        return $sdk;
+    }
+
+    /**
+     * Token detail
+     *
+     * @depends testTokenString
+     * @param MemberSDK $sdk
+     */
+    public function testTokenDetail(MemberSDK $sdk)
+    {
+        $token = $sdk->getToken();
+        $this->assertGreaterThan(0, count($token->getScopes()));
         sleep(1);
     }
 }

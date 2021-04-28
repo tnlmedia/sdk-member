@@ -41,9 +41,9 @@ class UserClient extends Client
 
         // Process result
         foreach ($result['list'] as $key => $item) {
-            $result['list'][$key] = new User($item);
+            $result['list'][$key] = new User($item, $this->core);
         }
-        $result = new SearchResult($result);
+        $result = new SearchResult($result, $this->core);
 
         return $result;
     }
@@ -70,7 +70,7 @@ class UserClient extends Client
         $result = $this->core->request('users/' . $user_id);
 
         // Build
-        $user = new User($result);
+        $user = new User($result, $this->core);
         return $user;
     }
 
@@ -99,7 +99,7 @@ class UserClient extends Client
         $result = $this->core->request('users/' . $user_id . '/status', $parameters, 'PATCH');
 
         // Build
-        $user = new User($result);
+        $user = new User($result, $this->core);
         return $user;
     }
 
@@ -124,7 +124,7 @@ class UserClient extends Client
         $result = $this->core->request('users/me');
 
         // Build
-        $user = new User($result);
+        $user = new User($result, $this->core);
         return $user;
     }
 }

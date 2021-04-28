@@ -2,6 +2,8 @@
 
 namespace TNLMedia\MemberSDK\Nodes;
 
+use TNLMedia\MemberSDK\MemberSDK;
+
 class Node implements NodeInterface
 {
     /**
@@ -12,11 +14,19 @@ class Node implements NodeInterface
     protected $attributes = [];
 
     /**
+     * Core class
+     *
+     * @var MemberSDK
+     */
+    protected $core;
+
+    /**
      * {@inheritDoc}
      */
-    public function __construct(array $attributes = [])
+    public function __construct(array $attributes = [], MemberSDK $core = null)
     {
         $this->initial($attributes);
+        $this->setSdkCore($core);
     }
 
     /**
@@ -25,6 +35,16 @@ class Node implements NodeInterface
     public function initial(array $attributes = [])
     {
         return $this->setAttributes(null, $attributes);
+    }
+
+    /**
+     * Set request sdk
+     *
+     * @param MemberSDK|null $core
+     */
+    public function setSdkCore(MemberSDK $core = null)
+    {
+        $this->core = $core;
     }
 
     /**
