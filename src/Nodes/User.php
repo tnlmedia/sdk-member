@@ -225,7 +225,7 @@ class User extends Node
      *
      * @return string
      */
-    public function getrelationship()
+    public function getRelationship()
     {
         $this->requireDetail();
         return $this->getStringAttributes('relationship');
@@ -297,7 +297,7 @@ class User extends Node
     }
 
     /**
-     * Member is enabled
+     * User is enabled
      *
      * @return bool
      */

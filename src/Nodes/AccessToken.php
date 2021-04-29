@@ -151,17 +151,6 @@ class AccessToken extends Node
     }
 
     /**
-     * Current user mail
-     *
-     * @return string
-     */
-    public function getUserMail()
-    {
-        $this->requireDetail();
-        return $this->getStringAttributes('user.mail');
-    }
-
-    /**
      * Current user avatar
      *
      * @return string
@@ -170,6 +159,17 @@ class AccessToken extends Node
     {
         $this->requireDetail();
         return $this->getStringAttributes('user.avatar');
+    }
+
+    /**
+     * Current user mail
+     *
+     * @return string
+     */
+    public function getUserMail()
+    {
+        $this->requireDetail();
+        return $this->getStringAttributes('user.mail.value');
     }
 
     /**
@@ -192,6 +192,17 @@ class AccessToken extends Node
     {
         $this->requireDetail();
         return $this->getStringAttributes('user.timezone');
+    }
+
+    /**
+     * Current user currency
+     *
+     * @return string
+     */
+    public function getUserCurrency()
+    {
+        $this->requireDetail();
+        return $this->getStringAttributes('user.currency');
     }
 
     /**
@@ -224,6 +235,26 @@ class AccessToken extends Node
             return true;
         }
         return false;
+    }
+
+    /**
+     * Current user mail is verified
+     *
+     * @return bool
+     */
+    public function isUserMailVerify()
+    {
+        return $this->getBooleanAttributes('user.mail.verify');
+    }
+
+    /**
+     * Current user is enabled
+     *
+     * @return bool
+     */
+    public function isUserEnable()
+    {
+        return $this->getBooleanAttributes('user.status');
     }
 
     /**
