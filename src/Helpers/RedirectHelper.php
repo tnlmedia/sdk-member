@@ -91,7 +91,7 @@ class RedirectHelper extends Helper
      */
     public function pageSubscription()
     {
-        return $this->buildUrl('security');
+        return $this->buildUrl('subscription');
     }
 
     /**

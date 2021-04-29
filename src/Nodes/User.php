@@ -4,9 +4,17 @@ namespace TNLMedia\MemberSDK\Nodes;
 
 use DateTime;
 use Throwable;
+use TNLMedia\MemberSDK\MemberSDK;
 
 class User extends Node
 {
+    /**
+     * Require loaded
+     *
+     * @var array
+     */
+    protected $requires = [];
+
     /**
      * Member ID
      *
@@ -54,7 +62,8 @@ class User extends Node
      */
     public function getMobileCode()
     {
-        return strval(explode('-', $this->getStringAttributes('mobile.tnlcode'))[0] ?? '');
+        $this->requireDetail();
+        return strval(explode('-', $this->getStringAttributes('mobile.telcode'))[0] ?? '');
     }
 
     /**
@@ -64,7 +73,8 @@ class User extends Node
      */
     public function getMobileISO()
     {
-        return strval(explode('-', $this->getStringAttributes('mobile.tnlcode'))[1] ?? '');
+        $this->requireDetail();
+        return strval(explode('-', $this->getStringAttributes('mobile.telcode'))[1] ?? '');
     }
 
     /**
@@ -74,6 +84,8 @@ class User extends Node
      */
     public function getMobile()
     {
+        $this->requireDetail();
+
         $value = $this->getStringAttributes('mobile.value');
         if (!empty($value)) {
             $value = $this->getMobileCode() . $value;
@@ -119,6 +131,7 @@ class User extends Node
      */
     public function getRealname()
     {
+        $this->requireDetail();
         return $this->getStringAttributes('realname');
     }
 
@@ -129,6 +142,8 @@ class User extends Node
      */
     public function getBirthday()
     {
+        $this->requireDetail();
+
         $value = new DateTime();
         $value->setTime(0, 0, 0);
         try {
@@ -146,6 +161,7 @@ class User extends Node
      */
     public function getGender()
     {
+        $this->requireDetail();
         return $this->getStringAttributes('gender');
     }
 
@@ -156,6 +172,7 @@ class User extends Node
      */
     public function getCountry()
     {
+        $this->requireDetail();
         return $this->getStringAttributes('country');
     }
 
@@ -166,6 +183,7 @@ class User extends Node
      */
     public function getEducation()
     {
+        $this->requireDetail();
         return $this->getStringAttributes('education');
     }
 
@@ -176,6 +194,7 @@ class User extends Node
      */
     public function getOccupation()
     {
+        $this->requireDetail();
         return $this->getStringAttributes('occupation');
     }
 
@@ -186,6 +205,7 @@ class User extends Node
      */
     public function getHeadline()
     {
+        $this->requireDetail();
         return $this->getStringAttributes('headline');
     }
 
@@ -196,6 +216,7 @@ class User extends Node
      */
     public function getIncome()
     {
+        $this->requireDetail();
         return $this->getStringAttributes('income');
     }
 
@@ -206,6 +227,7 @@ class User extends Node
      */
     public function getrelationship()
     {
+        $this->requireDetail();
         return $this->getStringAttributes('relationship');
     }
 
@@ -216,6 +238,7 @@ class User extends Node
      */
     public function getGoogleID()
     {
+        $this->requireDetail();
         return $this->getStringAttributes('connect.google.id');
     }
 
@@ -226,6 +249,7 @@ class User extends Node
      */
     public function getFacebookID()
     {
+        $this->requireDetail();
         return $this->getStringAttributes('connect.facebook.id');
     }
 
@@ -236,6 +260,7 @@ class User extends Node
      */
     public function getServiceList()
     {
+        $this->requireDetail();
         return array_column($this->getArrayAttributes('service'), 'id');
     }
 
@@ -246,6 +271,7 @@ class User extends Node
      */
     public function getFlagList()
     {
+        $this->requireDetail();
         return array_column($this->getArrayAttributes('flag'), 'name');
     }
 
@@ -266,6 +292,7 @@ class User extends Node
      */
     public function isMobileVerify()
     {
+        $this->requireDetail();
         return $this->getBooleanAttributes('mobile.verify');
     }
 
@@ -286,6 +313,7 @@ class User extends Node
      */
     public function isDmpEnable()
     {
+        $this->requireDetail();
         return $this->getBooleanAttributes('privacy.dmp', true);
     }
 
@@ -309,5 +337,33 @@ class User extends Node
     public function hasFlag(string $name)
     {
         return in_array($name, $this->getFlagList());
+    }
+
+    /**
+     * Load user detail
+     */
+    protected function requireDetail()
+    {
+        // Check available
+        if (!$this->core instanceof MemberSDK) {
+            return;
+        }
+        if (array_key_exists('created', $this->attributes)) {
+            return;
+        }
+        if (array_key_exists('detail', $this->requires)) {
+            return;
+        }
+        $this->requires['detail'] = true;
+
+        // Request
+        try {
+            $result = $this->core->user->get($this->getId());
+        } catch (Throwable $e) {
+            return;
+        }
+
+        // Update
+        $this->initial($result->getArrayAttributes() + $this->attributes);
     }
 }

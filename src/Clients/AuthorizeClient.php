@@ -81,33 +81,4 @@ class AuthorizeClient extends Client
         $this->core->setToken($token);
         return $token;
     }
-
-    /**
-     * Get token detail
-     *
-     * @param AccessToken $token
-     * @return AccessToken
-     * @throws \TNLMedia\MemberSDK\Exceptions\AuthorizeException
-     * @throws \TNLMedia\MemberSDK\Exceptions\DuplicateException
-     * @throws \TNLMedia\MemberSDK\Exceptions\Exception
-     * @throws \TNLMedia\MemberSDK\Exceptions\FormatException
-     * @throws \TNLMedia\MemberSDK\Exceptions\NotFoundException
-     * @throws \TNLMedia\MemberSDK\Exceptions\ProtectedException
-     * @throws \TNLMedia\MemberSDK\Exceptions\RequestException
-     * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
-     * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
-     * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
-     */
-    public function status(AccessToken $token)
-    {
-        // Request
-        $result = $this->core->request('token');
-
-        // Update
-        $result['token_type'] = $token->getType();
-        $result['expires_in'] = $token->getExpire()->getTimestamp();
-        $result['access_token'] = $token->getToken();
-        $token->initial($result);
-        return $token;
-    }
 }

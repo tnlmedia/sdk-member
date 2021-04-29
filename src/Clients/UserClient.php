@@ -37,7 +37,7 @@ class UserClient extends Client
             $parameters['offset'] = $offset;
         }
         $parameters['limit'] = $limit;
-        $result = $this->core->request('users');
+        $result = $this->core->request('users', $parameters);
 
         // Process result
         foreach ($result['list'] as $key => $item) {
@@ -97,31 +97,6 @@ class UserClient extends Client
         $parameters = [];
         $parameters['status'] = $status;
         $result = $this->core->request('users/' . $user_id . '/status', $parameters, 'PATCH');
-
-        // Build
-        $user = new User($result, $this->core);
-        return $user;
-    }
-
-    /**
-     * Get token current user
-     *
-     * @return User
-     * @throws \TNLMedia\MemberSDK\Exceptions\AuthorizeException
-     * @throws \TNLMedia\MemberSDK\Exceptions\DuplicateException
-     * @throws \TNLMedia\MemberSDK\Exceptions\Exception
-     * @throws \TNLMedia\MemberSDK\Exceptions\FormatException
-     * @throws \TNLMedia\MemberSDK\Exceptions\NotFoundException
-     * @throws \TNLMedia\MemberSDK\Exceptions\ProtectedException
-     * @throws \TNLMedia\MemberSDK\Exceptions\RequestException
-     * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
-     * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
-     * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
-     */
-    public function current()
-    {
-        // Request
-        $result = $this->core->request('users/me');
 
         // Build
         $user = new User($result, $this->core);

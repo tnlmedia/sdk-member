@@ -2,16 +2,27 @@
 
 namespace TNLMedia\MemberSDK\Nodes;
 
-class SearchResult extends Node
+use ArrayIterator;
+use IteratorAggregate;
+
+class SearchResult extends Node implements IteratorAggregate
 {
+    /**
+     * {@inheritDoc}
+     */
+    public function getIterator()
+    {
+        return $this->getList();
+    }
+
     /**
      * Result list
      *
-     * @return array
+     * @return ArrayIterator
      */
     public function getList()
     {
-        return $this->getArrayAttributes('list');
+        return new ArrayIterator($this->getArrayAttributes('list'));
     }
 
     /**
@@ -21,7 +32,7 @@ class SearchResult extends Node
      */
     public function getCount()
     {
-        return count($this->getArrayAttributes('list'));
+        return $this->getList()->count();
     }
 
     /**

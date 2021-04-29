@@ -7,11 +7,18 @@ use TNLMedia\MemberSDK\MemberSDK;
 class Node implements NodeInterface
 {
     /**
-     * Token attributes
+     * Node attributes
      *
      * @var array
      */
     protected $attributes = [];
+
+    /**
+     * Node relations
+     *
+     * @var array
+     */
+    protected $relations = [];
 
     /**
      * Core class
@@ -166,5 +173,43 @@ class Node implements NodeInterface
     public function getArrayAttributes($key = null, array $default = [])
     {
         return (array)$this->getAttributes($key, $default);
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setRelations(string $key, $value = null)
+    {
+        $this->relations[$key] = $value;
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function resetRelations()
+    {
+        $this->relations = [];
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getRelations($key = null, $default = null)
+    {
+        // Without key
+        if (is_null($key)) {
+            return $this->relations;
+        }
+        $key = strval($key);
+
+        // Check exists
+        if (array_key_exists($key, $this->relations)) {
+            return $this->relations[$key];
+        }
+
+        return $default;
     }
 }

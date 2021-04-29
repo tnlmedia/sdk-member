@@ -2,13 +2,15 @@
 
 namespace TNLMedia\MemberSDK\Tests;
 
+use ArrayIterator;
 use Dotenv\Dotenv;
 use PHPUnit\Framework\TestCase;
-use TNLMedia\MemberSDK\Exceptions\Exception;
+use TNLMedia\MemberSDK\Contents\UserStatusConstants;
 use TNLMedia\MemberSDK\MemberSDK;
 use TNLMedia\MemberSDK\Nodes\AccessToken;
+use TNLMedia\MemberSDK\Nodes\User;
 
-class AuthorizeTest extends TestCase
+class UserTest extends TestCase
 {
     /**
      * Build SDK
@@ -30,90 +32,85 @@ class AuthorizeTest extends TestCase
         $sdk = new MemberSDK($config);
         $this->assertTrue($sdk instanceof MemberSDK);
 
-        return $sdk;
-    }
-
-    /**
-     * Auth code token
-     *
-     * @depends testSdk
-     * @param MemberSDK $sdk
-     * @return MemberSDK
-     * @throws Exception
-     * @throws \TNLMedia\MemberSDK\Exceptions\AuthorizeException
-     * @throws \TNLMedia\MemberSDK\Exceptions\DuplicateException
-     * @throws \TNLMedia\MemberSDK\Exceptions\FormatException
-     * @throws \TNLMedia\MemberSDK\Exceptions\NotFoundException
-     * @throws \TNLMedia\MemberSDK\Exceptions\ProtectedException
-     * @throws \TNLMedia\MemberSDK\Exceptions\RequestException
-     * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
-     * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
-     * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
-     */
-    public function testAuthCode(MemberSDK $sdk)
-    {
-        $this->expectException(Exception::class);
-        $sdk->authorize->authCode('test', getenv('REDIRECT_URI'));
-        return $sdk;
-    }
-
-    /**
-     * Credential token
-     *
-     * @depends testSdk
-     * @param MemberSDK $sdk
-     * @return MemberSDK
-     * @throws Exception
-     * @throws \TNLMedia\MemberSDK\Exceptions\AuthorizeException
-     * @throws \TNLMedia\MemberSDK\Exceptions\DuplicateException
-     * @throws \TNLMedia\MemberSDK\Exceptions\FormatException
-     * @throws \TNLMedia\MemberSDK\Exceptions\NotFoundException
-     * @throws \TNLMedia\MemberSDK\Exceptions\ProtectedException
-     * @throws \TNLMedia\MemberSDK\Exceptions\RequestException
-     * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
-     * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
-     * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
-     */
-    public function testCredential(MemberSDK $sdk)
-    {
+        // Request token
         $sdk->authorize->credential();
         $this->assertTrue($sdk->getToken() instanceof AccessToken);
+
         return $sdk;
     }
 
     /**
-     * Token by string
+     * Search user
      *
-     * @depends testCredential
+     * @depends testSdk
      * @param MemberSDK $sdk
-     * @return MemberSDK
+     * @throws \TNLMedia\MemberSDK\Exceptions\AuthorizeException
+     * @throws \TNLMedia\MemberSDK\Exceptions\DuplicateException
+     * @throws \TNLMedia\MemberSDK\Exceptions\Exception
+     * @throws \TNLMedia\MemberSDK\Exceptions\FormatException
+     * @throws \TNLMedia\MemberSDK\Exceptions\NotFoundException
+     * @throws \TNLMedia\MemberSDK\Exceptions\ProtectedException
+     * @throws \TNLMedia\MemberSDK\Exceptions\RequestException
+     * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
+     * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
+     * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
      */
-    public function testTokenString(MemberSDK $sdk)
+    public function testSearch(MemberSDK $sdk)
     {
-        $sdk->setTokenString($sdk->getToken()->getToken());
-        $this->assertTrue($sdk->getToken() instanceof AccessToken);
-        return $sdk;
+        $result = $sdk->user->search([], null, 0, 1);
+        $this->assertTrue($result->getList() instanceof ArrayIterator);
+        foreach ($result->getList() as $user) {
+            $this->assertTrue($user instanceof User);
+            $this->assertNotEmpty($user->getMobileCode());
+        }
+        $this->assertEquals(1, $result->getCount());
+        $this->assertGreaterThan(0, $result->getTotal());
     }
 
     /**
-     * Token detail
+     * Get user
      *
-     * @depends testCredential
+     * @depends testSdk
      * @param MemberSDK $sdk
+     * @throws \TNLMedia\MemberSDK\Exceptions\AuthorizeException
+     * @throws \TNLMedia\MemberSDK\Exceptions\DuplicateException
+     * @throws \TNLMedia\MemberSDK\Exceptions\Exception
+     * @throws \TNLMedia\MemberSDK\Exceptions\FormatException
+     * @throws \TNLMedia\MemberSDK\Exceptions\NotFoundException
+     * @throws \TNLMedia\MemberSDK\Exceptions\ProtectedException
+     * @throws \TNLMedia\MemberSDK\Exceptions\RequestException
+     * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
+     * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
+     * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
      */
-    public function testTokenDetail(MemberSDK $sdk)
+    public function testGet(MemberSDK $sdk)
     {
-        $this->assertGreaterThan(0, count($sdk->getToken()->getScopes()));
+        $user = $sdk->user->get(intval($_ENV['USER_ID']));
+        $this->assertTrue($user instanceof User);
     }
 
     /**
-     * Token user
+     * Update user status
      *
-     * @depends testCredential
+     * @depends testSdk
      * @param MemberSDK $sdk
+     * @throws \TNLMedia\MemberSDK\Exceptions\AuthorizeException
+     * @throws \TNLMedia\MemberSDK\Exceptions\DuplicateException
+     * @throws \TNLMedia\MemberSDK\Exceptions\Exception
+     * @throws \TNLMedia\MemberSDK\Exceptions\FormatException
+     * @throws \TNLMedia\MemberSDK\Exceptions\NotFoundException
+     * @throws \TNLMedia\MemberSDK\Exceptions\ProtectedException
+     * @throws \TNLMedia\MemberSDK\Exceptions\RequestException
+     * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
+     * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
+     * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
      */
-    public function testTokenUser(MemberSDK $sdk)
+    public function testUpdateStatus(MemberSDK $sdk)
     {
-        $this->assertNull($sdk->getToken()->getUser());
+        $user = $sdk->user->updateStatus(intval($_ENV['USER_ID']), UserStatusConstants::DISABLED);
+        $this->assertFalse($user->isEnable());
+
+        $user = $sdk->user->updateStatus(intval($_ENV['USER_ID']), UserStatusConstants::ENABLED);
+        $this->assertTrue($user->isEnable());
     }
 }

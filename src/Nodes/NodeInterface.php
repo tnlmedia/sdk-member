@@ -43,4 +43,29 @@ interface NodeInterface
      * @return mixed
      */
     public function getAttributes($key = null, $default = null);
+
+    /**
+     * Set relations
+     *
+     * @param string $key
+     * @param mixed $value
+     * @return $this
+     */
+    public function setRelations(string $key, $value = null);
+
+    /**
+     * Clear relations
+     *
+     * @return $this
+     */
+    public function resetRelations();
+
+    /**
+     * Get relations
+     *
+     * @param string|null $key
+     * @param mixed $default
+     * @return mixed
+     */
+    public function getRelations($key = null, $default = null);
 }

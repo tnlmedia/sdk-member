@@ -3,9 +3,18 @@
 namespace TNLMedia\MemberSDK\Nodes;
 
 use DateTime;
+use Throwable;
+use TNLMedia\MemberSDK\MemberSDK;
 
 class AccessToken extends Node
 {
+    /**
+     * Require loaded
+     *
+     * @var array
+     */
+    protected $requires = [];
+
     /**
      * Convert to header string
      *
@@ -75,7 +84,7 @@ class AccessToken extends Node
      */
     public function getScopes()
     {
-        $this->requestDetail();
+        $this->requireDetail();
 
         $value = (array)$this->getAttributes('scopes', []);
         foreach ($value as $key => $item) {
@@ -91,7 +100,7 @@ class AccessToken extends Node
      */
     public function getConsole()
     {
-        $this->requestDetail();
+        $this->requireDetail();
         return $this->getArrayAttributes('console');
     }
 
@@ -102,19 +111,21 @@ class AccessToken extends Node
      */
     public function getConsoleID()
     {
-        $this->requestDetail();
+        $this->requireDetail();
         return $this->getIntegerAttributes('console.console_id');
     }
 
     /**
-     * User data
+     * User node
      *
-     * @return array
+     * @return User|null
      */
     public function getUser()
     {
-        $this->requestDetail();
-        return $this->getArrayAttributes('user');
+        $this->requireUser();
+        /** @var User|null $user */
+        $user = $this->getRelations('user');
+        return $user;
     }
 
     /**
@@ -124,8 +135,19 @@ class AccessToken extends Node
      */
     public function getUserID()
     {
-        $this->requestDetail();
+        $this->requireDetail();
         return $this->getIntegerAttributes('user.id');
+    }
+
+    /**
+     * Current user name
+     *
+     * @return string
+     */
+    public function getUserName()
+    {
+        $this->requireDetail();
+        return $this->getStringAttributes('user.nickname');
     }
 
     /**
@@ -135,7 +157,7 @@ class AccessToken extends Node
      */
     public function getUserMail()
     {
-        $this->requestDetail();
+        $this->requireDetail();
         return $this->getStringAttributes('user.mail');
     }
 
@@ -146,8 +168,30 @@ class AccessToken extends Node
      */
     public function getUserAvatar()
     {
-        $this->requestDetail();
+        $this->requireDetail();
         return $this->getStringAttributes('user.avatar');
+    }
+
+    /**
+     * Current user language
+     *
+     * @return string
+     */
+    public function getUserLanguage()
+    {
+        $this->requireDetail();
+        return $this->getStringAttributes('user.language');
+    }
+
+    /**
+     * Current user timezone
+     *
+     * @return string
+     */
+    public function getUserTimezone()
+    {
+        $this->requireDetail();
+        return $this->getStringAttributes('user.timezone');
     }
 
     /**
@@ -183,29 +227,56 @@ class AccessToken extends Node
     }
 
     /**
-     * Request token detail
-     *
-     * @throws \TNLMedia\MemberSDK\Exceptions\AuthorizeException
-     * @throws \TNLMedia\MemberSDK\Exceptions\DuplicateException
-     * @throws \TNLMedia\MemberSDK\Exceptions\Exception
-     * @throws \TNLMedia\MemberSDK\Exceptions\FormatException
-     * @throws \TNLMedia\MemberSDK\Exceptions\NotFoundException
-     * @throws \TNLMedia\MemberSDK\Exceptions\ProtectedException
-     * @throws \TNLMedia\MemberSDK\Exceptions\RequestException
-     * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
-     * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
-     * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
+     * Load token detail
      */
-    protected function requestDetail()
+    protected function requireDetail()
     {
+        // Check available
+        if (!$this->core instanceof MemberSDK) {
+            return;
+        }
         if (array_key_exists('scopes', $this->attributes)) {
             return;
         }
+        if (array_key_exists('detail', $this->requires)) {
+            return;
+        }
+        $this->requires['detail'] = true;
 
         // Request
-        $result = $this->core->request('token');
+        try {
+            $result = $this->core->request('token');
+        } catch (Throwable $e) {
+            return;
+        }
 
         // Update
         $this->initial($result + $this->attributes);
+    }
+
+    /**
+     * Load token user
+     */
+    protected function requireUser()
+    {
+        // Check available
+        if (!$this->core instanceof MemberSDK) {
+            return;
+        }
+        if (array_key_exists('user', $this->relations)) {
+            return;
+        }
+        $this->setRelations('user');
+
+        // Request
+        try {
+            $result = $this->core->request('users/me');
+        } catch (Throwable $e) {
+            return;
+        }
+
+        // Build
+        $user = new User($result, $this->core);
+        $this->setRelations('user', $user);
     }
 }
