@@ -28,13 +28,6 @@
             "TNLMedia\\MemberSDK\\Tests\\": "tests/"
         }
     },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "TNLMedia\\MemberSDK\\Laravel\\MemberSDKServiceProvider"
-            ]
-        }
-    },
     "scripts": {
         "test": "phpunit",
         "check-style": "phpcs src tests",
