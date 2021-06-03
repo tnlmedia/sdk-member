@@ -2,6 +2,7 @@
 
 namespace TNLMedia\MemberSDK\Nodes;
 
+use DateTime;
 use TNLMedia\MemberSDK\MemberSDK;
 
 class Node implements NodeInterface
@@ -173,6 +174,28 @@ class Node implements NodeInterface
     public function getArrayAttributes($key = null, array $default = [])
     {
         return (array)$this->getAttributes($key, $default);
+    }
+
+    /**
+     * Get attributes as datetime
+     *
+     * @param null $key
+     * @param int $default
+     * @return DateTime
+     */
+    public function getDateTimeAttributes($key = null, int $default = 0)
+    {
+        $timestamp = $this->getIntegerAttributes($key);
+        if (empty($timestamp)) {
+            $timestamp = $default;
+        }
+        if (empty($timestamp)) {
+            $timestamp = time();
+        }
+
+        $value = new DateTime();
+        $value->setTimestamp($timestamp);
+        return $value;
     }
 
 

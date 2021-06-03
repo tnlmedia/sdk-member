@@ -5,6 +5,11 @@ namespace TNLMedia\MemberSDK\Exceptions;
 use Exception as ExceptionBase;
 use Throwable;
 
+/**
+ * Class Exception
+ * @package TNLMedia\MemberSDK\Exceptions
+ * @see https://member.tnlmedia.com/docs/#/v1/response
+ */
 class Exception extends ExceptionBase
 {
     /**

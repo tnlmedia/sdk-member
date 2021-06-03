@@ -51,10 +51,7 @@ class AccessToken extends Node
      */
     public function getExpire()
     {
-        /** @var DateTime $value */
-        $value = new DateTime();
-        $value->setTimestamp($this->getIntegerAttributes('expire'));
-        return $value;
+        return $this->getDateTimeAttributes('expire');
     }
 
     /**

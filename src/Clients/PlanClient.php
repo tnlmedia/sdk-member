@@ -2,14 +2,15 @@
 
 namespace TNLMedia\MemberSDK\Clients;
 
+use TNLMedia\MemberSDK\Nodes\Plan;
 use TNLMedia\MemberSDK\Nodes\SearchResult;
-use TNLMedia\MemberSDK\Nodes\User;
 
-class UserClient extends Client
+class PlanClient extends Client
 {
     /**
-     * Search user in console
+     * Search plan in service
      *
+     * @param int $service_id
      * @param array $filters
      * @param string|null $sort
      * @param int $offset
@@ -25,9 +26,9 @@ class UserClient extends Client
      * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
      * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
      * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
-     * @see https://member.tnlmedia.com/docs/#/v1/user/search
+     * @see https://member.tnlmedia.com/docs/#/v1/service/plan-search
      */
-    public function search(array $filters = [], string $sort = null, int $offset = 0, int $limit = 10)
+    public function search(int $service_id, array $filters = [], string $sort = null, int $offset = 0, int $limit = 10)
     {
         // Request
         $parameters = $filters;
@@ -38,11 +39,11 @@ class UserClient extends Client
             $parameters['offset'] = $offset;
         }
         $parameters['limit'] = $limit;
-        $result = $this->core->request('users', $parameters);
+        $result = $this->core->request('services/' . $service_id . '/plans', $parameters);
 
         // Process result
         foreach ($result['list'] as $key => $item) {
-            $result['list'][$key] = new User($item, $this->core);
+            $result['list'][$key] = new Plan($item, $this->core);
         }
         $result = new SearchResult($result, $this->core);
 
@@ -50,10 +51,12 @@ class UserClient extends Client
     }
 
     /**
-     * Get target user
+     * Build new plan for service
      *
-     * @param int $user_id
-     * @return User
+     * @param int $service_id
+     * @param string $name
+     * @param array $attributes
+     * @return Plan
      * @throws \TNLMedia\MemberSDK\Exceptions\AuthorizeException
      * @throws \TNLMedia\MemberSDK\Exceptions\DuplicateException
      * @throws \TNLMedia\MemberSDK\Exceptions\Exception
@@ -64,24 +67,27 @@ class UserClient extends Client
      * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
      * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
      * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
-     * @see https://member.tnlmedia.com/docs/#/v1/user/get
+     * @see https://member.tnlmedia.com/docs/#/v1/service/plan-create
      */
-    public function get(int $user_id)
+    public function create(int $service_id, string $name, array $attributes = [])
     {
         // Request
-        $result = $this->core->request('users/' . $user_id);
+        $parameters = $attributes;
+        $parameters['name'] = $name;
+        $result = $this->core->request('services/' . $service_id . '/plans', $parameters, 'POST');
 
         // Build
-        $user = new User($result, $this->core);
-        return $user;
+        $plan = new Plan($result, $this->core);
+        return $plan;
     }
 
     /**
-     * Update target user status in console
+     * Update exists plan
      *
-     * @param int $user_id
-     * @param int $status
-     * @return User
+     * @param int $service_id
+     * @param int $plan_id
+     * @param array $attributes
+     * @return Plan
      * @throws \TNLMedia\MemberSDK\Exceptions\AuthorizeException
      * @throws \TNLMedia\MemberSDK\Exceptions\DuplicateException
      * @throws \TNLMedia\MemberSDK\Exceptions\Exception
@@ -92,17 +98,38 @@ class UserClient extends Client
      * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
      * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
      * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
-     * @see https://member.tnlmedia.com/docs/#/v1/user/update-status
+     * @see https://member.tnlmedia.com/docs/#/v1/service/plan-update
      */
-    public function updateStatus(int $user_id, int $status)
+    public function update(int $service_id, int $plan_id, array $attributes = [])
     {
         // Request
-        $parameters = [];
-        $parameters['status'] = $status;
-        $result = $this->core->request('users/' . $user_id . '/status', $parameters, 'PATCH');
+        $parameters = $attributes;
+        $result = $this->core->request('services/' . $service_id . '/plans/' . $plan_id, $parameters, 'PATCH');
 
         // Build
-        $user = new User($result, $this->core);
-        return $user;
+        $plan = new Plan($result, $this->core);
+        return $plan;
+    }
+
+    /**
+     * Remove useless plan
+     *
+     * @param int $service_id
+     * @param int $plan_id
+     * @throws \TNLMedia\MemberSDK\Exceptions\AuthorizeException
+     * @throws \TNLMedia\MemberSDK\Exceptions\DuplicateException
+     * @throws \TNLMedia\MemberSDK\Exceptions\Exception
+     * @throws \TNLMedia\MemberSDK\Exceptions\FormatException
+     * @throws \TNLMedia\MemberSDK\Exceptions\NotFoundException
+     * @throws \TNLMedia\MemberSDK\Exceptions\ProtectedException
+     * @throws \TNLMedia\MemberSDK\Exceptions\RequestException
+     * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
+     * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
+     * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
+     * @see https://member.tnlmedia.com/docs/#/v1/service/plan-delete
+     */
+    public function remove(int $service_id, int $plan_id)
+    {
+        $this->core->request('services/' . $service_id . '/plans/' . $plan_id, [], 'DELETE');
     }
 }

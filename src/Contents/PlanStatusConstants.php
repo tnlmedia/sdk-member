@@ -3,11 +3,11 @@
 namespace TNLMedia\MemberSDK\Contents;
 
 /**
- * Class UserStatusConstants
+ * Class PlanStatusConstants
  * @package TNLMedia\MemberSDK\Contents
- * @see https://member.tnlmedia.com/docs/#/v1/user/status-list
+ * @see https://member.tnlmedia.com/docs/#/v1/service/status-list
  */
-class UserStatusConstants
+class PlanStatusConstants
 {
     const DISABLED = 0;
     const ENABLED = 1;

@@ -21,12 +21,12 @@ class RedirectTest extends TestCase
 
         // Build SDK
         $config = [];
-        $config['environment'] = 'stage';
         $config['console_id'] = $_ENV['CONSOLE_ID'];
         $config['client_id'] = $_ENV['CLIENT_ID'];
         $config['client_secret'] = $_ENV['CLIENT_SECRET'];
         $config['redirect_uri'] = $_ENV['REDIRECT_URI'];
         $sdk = new MemberSDK($config);
+        $sdk->useStage();
         $this->assertTrue($sdk instanceof MemberSDK);
 
         // Request token
