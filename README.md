@@ -1,9 +1,4 @@
-# Member API PHP SDK
-
-## Maintainer
-
-James (james.liu@thenewslens.com)  
-Ken (ken@sportsv.net)
+# Member API SDK for PHP
 
 ## Install
 
@@ -11,10 +6,6 @@ Ken (ken@sportsv.net)
 composer require tnlmedia/member-sdk
 ```
 
-### Laravel integration
+### Document
 
-Laravel will automatically register, you don't need to do anything.
-
-(TBD)
-(TBD)
-(TBD)
+https://member.tnlmedia.com/docs/

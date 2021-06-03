@@ -1,4 +1,4 @@
-Copyright 2020 TNL Media Group
+Copyright 2021 TNL Media Group
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

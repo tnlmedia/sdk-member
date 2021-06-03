@@ -104,13 +104,13 @@ class MemberSDK
     public function __construct(array $config = [])
     {
         switch ($config['environment'] ?? '') {
-            case 'stage':
-                $this->useStage();
+            case 'production':
+                $this->useProduction();
                 break;
 
-            case 'production':
+            case 'sandbox':
             default:
-                $this->useProduction();
+                $this->useSandbox();
                 break;
         }
 
@@ -225,6 +225,17 @@ class MemberSDK
     public function useProduction()
     {
         $this->host = 'member.tnlmedia.com';
+        return $this;
+    }
+
+    /**
+     * Use sandbox environment
+     *
+     * @return $this
+     */
+    public function useSandbox()
+    {
+        $this->host = 'sandbox-member.tnlmedia.com';
         return $this;
     }
 
