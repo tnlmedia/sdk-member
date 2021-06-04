@@ -12,5 +12,5 @@ class RequestException extends Exception
     /**
      * {@inheritDoc}
      */
-    protected $code = 500;
+    protected $code = 50000;
 }
