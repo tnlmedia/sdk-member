@@ -1,13 +1,13 @@
 <?php
 
-namespace TNLMedia\MemberSDK\Contents;
+namespace TNLMedia\MemberSDK\Constants;
 
 /**
- * Class ScopeContents
- * @package TNLMedia\MemberSDK\Contents
+ * Class ScopeConstants
+ * @package TNLMedia\MemberSDK\Constants
  * @see https://member.tnlmedia.com/docs/#/v1/auth/scope
  */
-class ScopeContents
+class ScopeConstants
 {
     // Client
     const CONSOLE_SWITCH = 'console_switch';

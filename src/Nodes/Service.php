@@ -3,7 +3,7 @@
 namespace TNLMedia\MemberSDK\Nodes;
 
 use DateTime;
-use TNLMedia\MemberSDK\Contents\ServiceStatusConstants;
+use TNLMedia\MemberSDK\Constants\ServiceStatusConstants;
 
 class Service extends Node
 {

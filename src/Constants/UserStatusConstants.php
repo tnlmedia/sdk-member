@@ -1,10 +1,10 @@
 <?php
 
-namespace TNLMedia\MemberSDK\Contents;
+namespace TNLMedia\MemberSDK\Constants;
 
 /**
  * Class UserStatusConstants
- * @package TNLMedia\MemberSDK\Contents
+ * @package TNLMedia\MemberSDK\Constants
  * @see https://member.tnlmedia.com/docs/#/v1/user/status-list
  */
 class UserStatusConstants

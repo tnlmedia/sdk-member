@@ -2,7 +2,7 @@
 
 namespace TNLMedia\MemberSDK\Clients;
 
-use TNLMedia\MemberSDK\Contents\ServicePeriodConstants;
+use TNLMedia\MemberSDK\Constants\ServicePeriodConstants;
 use TNLMedia\MemberSDK\Nodes\SearchResult;
 use TNLMedia\MemberSDK\Nodes\Service;
 use TNLMedia\MemberSDK\Nodes\User;

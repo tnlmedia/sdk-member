@@ -3,7 +3,7 @@
 namespace TNLMedia\MemberSDK\Nodes;
 
 use DateTime;
-use TNLMedia\MemberSDK\Contents\PlanStatusConstants;
+use TNLMedia\MemberSDK\Constants\PlanStatusConstants;
 
 class Plan extends Node
 {

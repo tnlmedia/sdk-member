@@ -5,7 +5,7 @@ namespace TNLMedia\MemberSDK\Tests;
 use ArrayIterator;
 use Dotenv\Dotenv;
 use PHPUnit\Framework\TestCase;
-use TNLMedia\MemberSDK\Contents\ServiceStatusConstants;
+use TNLMedia\MemberSDK\Constants\ServiceStatusConstants;
 use TNLMedia\MemberSDK\MemberSDK;
 use TNLMedia\MemberSDK\Nodes\AccessToken;
 use TNLMedia\MemberSDK\Nodes\Service;

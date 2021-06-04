@@ -3,7 +3,7 @@
 namespace TNLMedia\MemberSDK\Nodes;
 
 use DateTime;
-use TNLMedia\MemberSDK\Contents\FlagTypeConstants;
+use TNLMedia\MemberSDK\Constants\FlagTypeConstants;
 
 class Flag extends Node
 {

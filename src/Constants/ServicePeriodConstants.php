@@ -1,10 +1,10 @@
 <?php
 
-namespace TNLMedia\MemberSDK\Contents;
+namespace TNLMedia\MemberSDK\Constants;
 
 /**
  * Class ServicePeriodConstants
- * @package TNLMedia\MemberSDK\Contents
+ * @package TNLMedia\MemberSDK\Constants
  * @see https://member.tnlmedia.com/docs/#/v1/service/period-type
  */
 class ServicePeriodConstants
