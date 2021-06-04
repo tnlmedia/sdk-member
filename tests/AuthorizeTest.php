@@ -28,7 +28,7 @@ class AuthorizeTest extends TestCase
         $config['redirect_uri'] = $_ENV['REDIRECT_URI'];
         $sdk = new MemberSDK($config);
         $sdk->useStage();
-        $this->assertTrue($sdk instanceof MemberSDK);
+        $this->assertInstanceOf(MemberSDK::class, $sdk);
 
         return $sdk;
     }
@@ -77,7 +77,7 @@ class AuthorizeTest extends TestCase
     public function testCredential(MemberSDK $sdk)
     {
         $sdk->authorize->credential();
-        $this->assertTrue($sdk->getToken() instanceof AccessToken);
+        $this->assertInstanceOf(AccessToken::class, $sdk->getToken());
         return $sdk;
     }
 
@@ -91,7 +91,7 @@ class AuthorizeTest extends TestCase
     public function testTokenString(MemberSDK $sdk)
     {
         $sdk->setTokenString($sdk->getToken()->getToken());
-        $this->assertTrue($sdk->getToken() instanceof AccessToken);
+        $this->assertInstanceOf(AccessToken::class, $sdk->getToken());
         return $sdk;
     }
 

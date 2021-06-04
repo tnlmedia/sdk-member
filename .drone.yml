@@ -1,0 +1,145 @@
+kind: pipeline
+type: kubernetes
+name: test-8.0
+
+trigger:
+    branch:
+        - master
+    event:
+        - push
+
+steps:
+    - name: Unit test (8.0)
+      image: composer:2.1.0
+      environment:
+          CONSOLE_ID:
+              from_secret: CONSOLE_ID
+          CLIENT_ID:
+              from_secret: CLIENT_ID
+          CLIENT_SECRET:
+              from_secret: CLIENT_SECRET
+          REDIRECT_URI:
+              from_secret: REDIRECT_URI
+          USER_ID:
+              from_secret: USER_ID
+      commands:
+          - composer update
+          - touch .env
+          - echo "CONSOLE_ID=\"$${CONSOLE_ID}\"" >> .env
+          - echo "CLIENT_ID=\"$${CLIENT_ID}\"" >> .env
+          - echo "CLIENT_SECRET=\"$${CLIENT_SECRET}\"" >> .env
+          - echo "REDIRECT_URI=\"$${REDIRECT_URI}\"" >> .env
+          - echo "USER_ID=\"$${USER_ID}\"" >> .env
+          - composer test tests\
+      when:
+          branch:
+              - master
+          event:
+              - push
+
+---
+
+kind: pipeline
+type: kubernetes
+name: notify-8.0
+
+steps:
+    - name: Slack (8.0)
+      image: plugins/slack
+      settings:
+          webhook: https://hooks.slack.com/services/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
+          channel: drone_notification
+          username: Member SDK [8.0] - Drone
+          template: >
+              *{{#success build.status}}✔{{ else }}✘{{/success}} {{ uppercasefirst build.status }}: Unit test #{{ build.number }}* (type: `{{ build.event }}`)
+
+              Commit <https://gitlab.com/{{ repo.owner }}/{{ repo.name }}/commit/{{ build.commit }}|{{ truncate build.commit 8 }}> /
+              Branch: <https://gitlab.com/{{ repo.owner }}/{{ repo.name }}/commits/{{ build.branch }}|{{ build.branch }}> /
+              Author: {{ build.author }}
+
+              <{{ build.link }}|Progress detail...>
+clone:
+    disable: true
+depends_on:
+    - test-8.0
+trigger:
+    status:
+        - failure
+        - success
+    branch: master
+    event:
+        - push
+
+---
+
+kind: pipeline
+type: kubernetes
+name: test-7.4
+
+trigger:
+    branch:
+        - master
+    event:
+        - push
+
+steps:
+    - name: Unit test (7.4)
+      image: composer:2.0.8
+      environment:
+          CONSOLE_ID:
+              from_secret: CONSOLE_ID
+          CLIENT_ID:
+              from_secret: CLIENT_ID
+          CLIENT_SECRET:
+              from_secret: CLIENT_SECRET
+          REDIRECT_URI:
+              from_secret: REDIRECT_URI
+          USER_ID:
+              from_secret: USER_ID
+      commands:
+          - composer update
+          - touch .env
+          - echo "CONSOLE_ID=\"$${CONSOLE_ID}\"" >> .env
+          - echo "CLIENT_ID=\"$${CLIENT_ID}\"" >> .env
+          - echo "CLIENT_SECRET=\"$${CLIENT_SECRET}\"" >> .env
+          - echo "REDIRECT_URI=\"$${REDIRECT_URI}\"" >> .env
+          - echo "USER_ID=\"$${USER_ID}\"" >> .env
+          - composer test tests\
+      when:
+          branch:
+              - master
+          event:
+              - push
+
+---
+
+kind: pipeline
+type: kubernetes
+name: notify-7.4
+
+steps:
+    - name: Slack (7.4)
+      image: plugins/slack
+      settings:
+          webhook: https://hooks.slack.com/services/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
+          channel: drone_notification
+          username: Member SDK [7.4] - Drone
+          template: >
+              *{{#success build.status}}✔{{ else }}✘{{/success}} {{ uppercasefirst build.status }}: Unit test #{{ build.number }}* (type: `{{ build.event }}`)
+
+              Commit <https://gitlab.com/{{ repo.owner }}/{{ repo.name }}/commit/{{ build.commit }}|{{ truncate build.commit 8 }}> /
+              Branch: <https://gitlab.com/{{ repo.owner }}/{{ repo.name }}/commits/{{ build.branch }}|{{ build.branch }}> /
+              Author: {{ build.author }}
+
+              <{{ build.link }}|Progress detail...>
+clone:
+    disable: true
+depends_on:
+    - test-7.4
+trigger:
+    status:
+        - failure
+        - success
+    branch: master
+    event:
+        - push

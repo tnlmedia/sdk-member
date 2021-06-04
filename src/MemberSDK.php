@@ -6,6 +6,7 @@ use Throwable;
 use TNLMedia\MemberSDK\Clients\AuthorizeClient;
 use TNLMedia\MemberSDK\Clients\Client;
 use TNLMedia\MemberSDK\Clients\FlagClient;
+use TNLMedia\MemberSDK\Clients\PlanClient;
 use TNLMedia\MemberSDK\Clients\ServiceClient;
 use TNLMedia\MemberSDK\Clients\UserClient;
 use TNLMedia\MemberSDK\Exceptions\AuthorizeException;
@@ -28,6 +29,7 @@ use TNLMedia\MemberSDK\Nodes\AccessToken;
  * @property AuthorizeClient $authorize
  * @property UserClient $user
  * @property ServiceClient $service
+ * @property PlanClient $plan
  * @property FlagClient $flag
  * @property RedirectHelper $redirect
  */

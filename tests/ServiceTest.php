@@ -5,12 +5,13 @@ namespace TNLMedia\MemberSDK\Tests;
 use ArrayIterator;
 use Dotenv\Dotenv;
 use PHPUnit\Framework\TestCase;
-use TNLMedia\MemberSDK\Contents\UserStatusConstants;
+use TNLMedia\MemberSDK\Contents\ServiceStatusConstants;
 use TNLMedia\MemberSDK\MemberSDK;
 use TNLMedia\MemberSDK\Nodes\AccessToken;
+use TNLMedia\MemberSDK\Nodes\Service;
 use TNLMedia\MemberSDK\Nodes\User;
 
-class UserTest extends TestCase
+class ServiceTest extends TestCase
 {
     /**
      * Build SDK
@@ -40,10 +41,11 @@ class UserTest extends TestCase
     }
 
     /**
-     * Search user
+     * Search service
      *
      * @depends testSdk
      * @param MemberSDK $sdk
+     * @return array
      * @throws \TNLMedia\MemberSDK\Exceptions\AuthorizeException
      * @throws \TNLMedia\MemberSDK\Exceptions\DuplicateException
      * @throws \TNLMedia\MemberSDK\Exceptions\Exception
@@ -57,21 +59,26 @@ class UserTest extends TestCase
      */
     public function testSearch(MemberSDK $sdk)
     {
-        $result = $sdk->user->search([], null, 0, 1);
+        $result = $sdk->service->search([], null, 0, 1);
         $this->assertInstanceOf(ArrayIterator::class, $result->getList());
-        foreach ($result->getList() as $user) {
-            $this->assertInstanceOf(User::class, $user);
-            $this->assertNotEmpty($user->getMobileCode());
+        foreach ($result->getList() as $service) {
+            $this->assertInstanceOf(Service::class, $service);
+            $this->assertNotEmpty($service->getName());
         }
         $this->assertEquals(1, $result->getCount());
         $this->assertGreaterThan(0, $result->getTotal());
+
+        return [
+            'sdk' => $sdk,
+            'service' => $service,
+        ];
     }
 
     /**
-     * Get user
+     * Extend user
      *
-     * @depends testSdk
-     * @param MemberSDK $sdk
+     * @depends testSearch
+     * @param array $source
      * @throws \TNLMedia\MemberSDK\Exceptions\AuthorizeException
      * @throws \TNLMedia\MemberSDK\Exceptions\DuplicateException
      * @throws \TNLMedia\MemberSDK\Exceptions\Exception
@@ -83,14 +90,20 @@ class UserTest extends TestCase
      * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
      * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
      */
-    public function testGet(MemberSDK $sdk)
+    public function testExtend(array $source)
     {
-        $user = $sdk->user->get(intval($_ENV['USER_ID']));
+        /** @var MemberSDK $sdk */
+        $sdk = $source['sdk'];
+        /** @var Service $service */
+        $service = $source['service'];
+
+        $user = $sdk->service->extend($_ENV['USER_ID'], $service->getId());
         $this->assertInstanceOf(User::class, $user);
+        $this->assertTrue($user->hasService($service->getId()));
     }
 
     /**
-     * Update user status
+     * New service and update, clear it.
      *
      * @depends testSdk
      * @param MemberSDK $sdk
@@ -105,12 +118,19 @@ class UserTest extends TestCase
      * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
      * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
      */
-    public function testUpdateStatus(MemberSDK $sdk)
+    public function testNew(MemberSDK $sdk)
     {
-        $user = $sdk->user->updateStatus(intval($_ENV['USER_ID']), UserStatusConstants::DISABLED);
-        $this->assertFalse($user->isEnable());
+        // Create
+        $service = $sdk->service->create('Test service');
+        $this->assertInstanceOf(Service::class, $service);
+        $this->assertFalse($service->isEnable());
 
-        $user = $sdk->user->updateStatus(intval($_ENV['USER_ID']), UserStatusConstants::ENABLED);
-        $this->assertTrue($user->isEnable());
+        // Update
+        $service = $sdk->service->update($service->getId(), ['status' => ServiceStatusConstants::ENABLED]);
+        $this->assertInstanceOf(Service::class, $service);
+        $this->assertTrue($service->isEnable());
+
+        // Delete
+        $sdk->service->remove($service->getId());
     }
 }

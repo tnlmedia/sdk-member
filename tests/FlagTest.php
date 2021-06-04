@@ -5,12 +5,13 @@ namespace TNLMedia\MemberSDK\Tests;
 use ArrayIterator;
 use Dotenv\Dotenv;
 use PHPUnit\Framework\TestCase;
-use TNLMedia\MemberSDK\Contents\UserStatusConstants;
+use TNLMedia\MemberSDK\Contents\FlagTypeConstants;
 use TNLMedia\MemberSDK\MemberSDK;
 use TNLMedia\MemberSDK\Nodes\AccessToken;
+use TNLMedia\MemberSDK\Nodes\Flag;
 use TNLMedia\MemberSDK\Nodes\User;
 
-class UserTest extends TestCase
+class FlagTest extends TestCase
 {
     /**
      * Build SDK
@@ -40,9 +41,40 @@ class UserTest extends TestCase
     }
 
     /**
-     * Search user
+     * Flag user
      *
      * @depends testSdk
+     * @param MemberSDK $sdk
+     * @throws \TNLMedia\MemberSDK\Exceptions\AuthorizeException
+     * @throws \TNLMedia\MemberSDK\Exceptions\DuplicateException
+     * @throws \TNLMedia\MemberSDK\Exceptions\Exception
+     * @throws \TNLMedia\MemberSDK\Exceptions\FormatException
+     * @throws \TNLMedia\MemberSDK\Exceptions\NotFoundException
+     * @throws \TNLMedia\MemberSDK\Exceptions\ProtectedException
+     * @throws \TNLMedia\MemberSDK\Exceptions\RequestException
+     * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
+     * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
+     * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
+     */
+    public function testFlagUser(MemberSDK $sdk)
+    {
+        // Flag
+        $user = $sdk->flag->setFlag($_ENV['USER_ID'], 'Test flag');
+        $this->assertInstanceOf(User::class, $user);
+        $this->assertTrue($user->hasFlag('Test flag'));
+
+        // Unflag
+        $user = $sdk->flag->removeFlag($_ENV['USER_ID'], 'Test flag');
+        $this->assertInstanceOf(User::class, $user);
+        $this->assertFalse($user->hasFlag('Test flag'));
+
+        return $sdk;
+    }
+
+    /**
+     * Search flag
+     *
+     * @depends testFlagUser
      * @param MemberSDK $sdk
      * @throws \TNLMedia\MemberSDK\Exceptions\AuthorizeException
      * @throws \TNLMedia\MemberSDK\Exceptions\DuplicateException
@@ -57,60 +89,13 @@ class UserTest extends TestCase
      */
     public function testSearch(MemberSDK $sdk)
     {
-        $result = $sdk->user->search([], null, 0, 1);
+        $result = $sdk->flag->search(['type' => FlagTypeConstants::CUSTOM], null, 0, 1);
         $this->assertInstanceOf(ArrayIterator::class, $result->getList());
-        foreach ($result->getList() as $user) {
-            $this->assertInstanceOf(User::class, $user);
-            $this->assertNotEmpty($user->getMobileCode());
+        foreach ($result->getList() as $flag) {
+            $this->assertInstanceOf(Flag::class, $flag);
+            $this->assertEquals(FlagTypeConstants::CUSTOM, $flag->getType());
         }
         $this->assertEquals(1, $result->getCount());
         $this->assertGreaterThan(0, $result->getTotal());
-    }
-
-    /**
-     * Get user
-     *
-     * @depends testSdk
-     * @param MemberSDK $sdk
-     * @throws \TNLMedia\MemberSDK\Exceptions\AuthorizeException
-     * @throws \TNLMedia\MemberSDK\Exceptions\DuplicateException
-     * @throws \TNLMedia\MemberSDK\Exceptions\Exception
-     * @throws \TNLMedia\MemberSDK\Exceptions\FormatException
-     * @throws \TNLMedia\MemberSDK\Exceptions\NotFoundException
-     * @throws \TNLMedia\MemberSDK\Exceptions\ProtectedException
-     * @throws \TNLMedia\MemberSDK\Exceptions\RequestException
-     * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
-     * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
-     * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
-     */
-    public function testGet(MemberSDK $sdk)
-    {
-        $user = $sdk->user->get(intval($_ENV['USER_ID']));
-        $this->assertInstanceOf(User::class, $user);
-    }
-
-    /**
-     * Update user status
-     *
-     * @depends testSdk
-     * @param MemberSDK $sdk
-     * @throws \TNLMedia\MemberSDK\Exceptions\AuthorizeException
-     * @throws \TNLMedia\MemberSDK\Exceptions\DuplicateException
-     * @throws \TNLMedia\MemberSDK\Exceptions\Exception
-     * @throws \TNLMedia\MemberSDK\Exceptions\FormatException
-     * @throws \TNLMedia\MemberSDK\Exceptions\NotFoundException
-     * @throws \TNLMedia\MemberSDK\Exceptions\ProtectedException
-     * @throws \TNLMedia\MemberSDK\Exceptions\RequestException
-     * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
-     * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
-     * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
-     */
-    public function testUpdateStatus(MemberSDK $sdk)
-    {
-        $user = $sdk->user->updateStatus(intval($_ENV['USER_ID']), UserStatusConstants::DISABLED);
-        $this->assertFalse($user->isEnable());
-
-        $user = $sdk->user->updateStatus(intval($_ENV['USER_ID']), UserStatusConstants::ENABLED);
-        $this->assertTrue($user->isEnable());
     }
 }

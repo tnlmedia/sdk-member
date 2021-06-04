@@ -5,13 +5,15 @@ namespace TNLMedia\MemberSDK\Tests;
 use ArrayIterator;
 use Dotenv\Dotenv;
 use PHPUnit\Framework\TestCase;
-use TNLMedia\MemberSDK\Contents\UserStatusConstants;
+use TNLMedia\MemberSDK\Contents\ServiceStatusConstants;
 use TNLMedia\MemberSDK\MemberSDK;
 use TNLMedia\MemberSDK\Nodes\AccessToken;
-use TNLMedia\MemberSDK\Nodes\User;
+use TNLMedia\MemberSDK\Nodes\Plan;
 
-class UserTest extends TestCase
+class PlanTest extends TestCase
 {
+    const SERVICE_ID = 1;
+
     /**
      * Build SDK
      *
@@ -40,7 +42,7 @@ class UserTest extends TestCase
     }
 
     /**
-     * Search user
+     * Search plan
      *
      * @depends testSdk
      * @param MemberSDK $sdk
@@ -57,18 +59,18 @@ class UserTest extends TestCase
      */
     public function testSearch(MemberSDK $sdk)
     {
-        $result = $sdk->user->search([], null, 0, 1);
+        $result = $sdk->plan->search(self::SERVICE_ID, [], null, 0, 1);
         $this->assertInstanceOf(ArrayIterator::class, $result->getList());
-        foreach ($result->getList() as $user) {
-            $this->assertInstanceOf(User::class, $user);
-            $this->assertNotEmpty($user->getMobileCode());
+        foreach ($result->getList() as $plan) {
+            $this->assertInstanceOf(Plan::class, $plan);
+            $this->assertNotEmpty($plan->getName());
         }
         $this->assertEquals(1, $result->getCount());
         $this->assertGreaterThan(0, $result->getTotal());
     }
 
     /**
-     * Get user
+     * New plan and update, clear it.
      *
      * @depends testSdk
      * @param MemberSDK $sdk
@@ -83,34 +85,19 @@ class UserTest extends TestCase
      * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
      * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
      */
-    public function testGet(MemberSDK $sdk)
+    public function testNew(MemberSDK $sdk)
     {
-        $user = $sdk->user->get(intval($_ENV['USER_ID']));
-        $this->assertInstanceOf(User::class, $user);
-    }
+        // Create
+        $plan = $sdk->plan->create(self::SERVICE_ID, 'Test plan');
+        $this->assertInstanceOf(Plan::class, $plan);
+        $this->assertFalse($plan->isEnable());
 
-    /**
-     * Update user status
-     *
-     * @depends testSdk
-     * @param MemberSDK $sdk
-     * @throws \TNLMedia\MemberSDK\Exceptions\AuthorizeException
-     * @throws \TNLMedia\MemberSDK\Exceptions\DuplicateException
-     * @throws \TNLMedia\MemberSDK\Exceptions\Exception
-     * @throws \TNLMedia\MemberSDK\Exceptions\FormatException
-     * @throws \TNLMedia\MemberSDK\Exceptions\NotFoundException
-     * @throws \TNLMedia\MemberSDK\Exceptions\ProtectedException
-     * @throws \TNLMedia\MemberSDK\Exceptions\RequestException
-     * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
-     * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
-     * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
-     */
-    public function testUpdateStatus(MemberSDK $sdk)
-    {
-        $user = $sdk->user->updateStatus(intval($_ENV['USER_ID']), UserStatusConstants::DISABLED);
-        $this->assertFalse($user->isEnable());
+        // Update
+        $plan = $sdk->plan->update(self::SERVICE_ID, $plan->getId(), ['status' => ServiceStatusConstants::ENABLED]);
+        $this->assertInstanceOf(Plan::class, $plan);
+        $this->assertTrue($plan->isEnable());
 
-        $user = $sdk->user->updateStatus(intval($_ENV['USER_ID']), UserStatusConstants::ENABLED);
-        $this->assertTrue($user->isEnable());
+        // Delete
+        $sdk->plan->remove(self::SERVICE_ID, $plan->getId());
     }
 }
