@@ -97,15 +97,11 @@ class RedirectHelper extends Helper
     /**
      * Purchase a subscription
      *
-     * @param int $plan_id
+     * @param array $query
      * @return string
      */
-    public function purchaseSubscription(int $plan_id)
+    public function purchaseSubscription(array $query = [])
     {
-        $query = [];
-        if (!empty($plan_id)) {
-            $query['plan_id'] = $plan_id;
-        }
         return $this->buildUrl('subscription/forward', $query);
     }
 

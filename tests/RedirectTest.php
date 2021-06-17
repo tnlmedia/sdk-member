@@ -72,7 +72,7 @@ class RedirectTest extends TestCase
         $this->assertStringContainsString($client_query, $url);
         $this->assertStringContainsString('/subscription', $url);
 
-        $url = $sdk->redirect->purchaseSubscription(1);
+        $url = $sdk->redirect->purchaseSubscription(['service' => 1]);
         $this->assertStringContainsString($client_query, $url);
         $this->assertStringContainsString('/subscription/forward', $url);
     }
