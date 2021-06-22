@@ -78,6 +78,26 @@ class Service extends Node
     }
 
     /**
+     * Total cancelled history
+     *
+     * @return int
+     */
+    public function countCancelledHistory()
+    {
+        return $this->getIntegerAttributes('counter.cancelled');
+    }
+
+    /**
+     * Total returned history
+     *
+     * @return int
+     */
+    public function countReturnedHistory()
+    {
+        return $this->getIntegerAttributes('counter.returned');
+    }
+
+    /**
      * Service is available
      *
      * @return bool
