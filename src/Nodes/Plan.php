@@ -68,6 +68,16 @@ class Plan extends Node
     }
 
     /**
+     * Product page link
+     *
+     * @return string
+     */
+    public function getAction()
+    {
+        return $this->getStringAttributes('action');
+    }
+
+    /**
      * Build time
      *
      * @return DateTime
