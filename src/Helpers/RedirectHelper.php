@@ -12,11 +12,11 @@ class RedirectHelper extends Helper
      * @param string|null $redirect_uri
      * @param array $scopes
      * @return string
+     * @deprecated Since 3.0
      */
     public function login(string $tips = null, string $state = null, string $redirect_uri = null, array $scopes = [])
     {
         $query = [];
-        $query['redirect_uri'] = $redirect_uri ?? $this->core->getDefaultRedirect();
         if (!empty($scopes)) {
             $query['scope'] = implode(' ', $scopes);
         }
@@ -25,6 +25,25 @@ class RedirectHelper extends Helper
         }
         if ($tips !== null) {
             $query['tips'] = $tips;
+        }
+        return $this->authorize($redirect_uri ?? $this->core->getDefaultRedirect(), $query);
+    }
+
+    /**
+     * Login authorize page
+     *
+     * @param string $redirect_uri
+     * @param array $extra
+     * @return string
+     */
+    public function authorize(string $redirect_uri, array $extra = [])
+    {
+        $query = $extra;
+        $query['redirect_uri'] = $redirect_uri;
+        if (isset($query['scope'])) {
+            if (is_array($query['scope'])) {
+                $query['scope'] = implode(' ', $query['scope']);
+            }
         }
         return $this->buildUrl('/', $query);
     }

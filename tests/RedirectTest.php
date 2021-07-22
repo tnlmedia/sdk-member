@@ -4,6 +4,7 @@ namespace TNLMedia\MemberSDK\Tests;
 
 use Dotenv\Dotenv;
 use PHPUnit\Framework\TestCase;
+use TNLMedia\MemberSDK\Constants\ScopeConstants;
 use TNLMedia\MemberSDK\MemberSDK;
 use TNLMedia\MemberSDK\Nodes\AccessToken;
 
@@ -44,8 +45,13 @@ class RedirectTest extends TestCase
     {
         $client_query = 'client_id=' . $sdk->getClientID();
 
-        $url = $sdk->redirect->login(null, 'RedirectTest');
+        $url = $sdk->redirect->authorize('RedirectTest', [
+            'scope' => [
+                ScopeConstants::USER_BASIC,
+            ],
+        ]);
         $this->assertStringContainsString($client_query, $url);
+        $this->assertStringContainsString('scope=' . ScopeConstants::USER_BASIC, $url);
         $this->assertStringContainsString('state=RedirectTest', $url);
 
         $url = $sdk->redirect->logout();
