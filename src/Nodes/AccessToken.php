@@ -148,17 +148,6 @@ class AccessToken extends Node
     }
 
     /**
-     * Current user avatar
-     *
-     * @return string
-     */
-    public function getUserAvatar()
-    {
-        $this->requireDetail();
-        return $this->getStringAttributes('user.avatar');
-    }
-
-    /**
      * Current user mail
      *
      * @return string
@@ -167,6 +156,55 @@ class AccessToken extends Node
     {
         $this->requireDetail();
         return $this->getStringAttributes('user.mail.value');
+    }
+
+    /**
+     * Current user mobile country code in E.164
+     *
+     * @return string
+     */
+    public function getUserMobileCode()
+    {
+        $this->requireDetail();
+        return strval(explode('-', $this->getStringAttributes('user.mobile.telcode'))[0] ?? '');
+    }
+
+    /**
+     * Current user mobile country code in ISO 3166-1 alpha-3
+     *
+     * @return string
+     */
+    public function getUserMobileISO()
+    {
+        $this->requireDetail();
+        return strval(explode('-', $this->getStringAttributes('user.mobile.telcode'))[1] ?? '');
+    }
+
+    /**
+     * Current user mobile
+     *
+     * @return string
+     */
+    public function getUserMobile()
+    {
+        $this->requireDetail();
+        $value = $this->getStringAttributes('user.mobile.value');
+        if (!empty($value)) {
+            $value = $this->getUserMobileCode() . $value;
+            $value = '+' . $value;
+        }
+        return $value;
+    }
+
+    /**
+     * Current user avatar
+     *
+     * @return string
+     */
+    public function getUserAvatar()
+    {
+        $this->requireDetail();
+        return $this->getStringAttributes('user.avatar');
     }
 
     /**

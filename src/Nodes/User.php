@@ -62,18 +62,16 @@ class User extends Node
      */
     public function getMobileCode()
     {
-        $this->requireDetail();
         return strval(explode('-', $this->getStringAttributes('mobile.telcode'))[0] ?? '');
     }
 
     /**
-     * Contact mobile country code in ISO 3166-1
+     * Contact mobile country code in ISO 3166-1 alpha-3
      *
      * @return string
      */
     public function getMobileISO()
     {
-        $this->requireDetail();
         return strval(explode('-', $this->getStringAttributes('mobile.telcode'))[1] ?? '');
     }
 
@@ -84,8 +82,6 @@ class User extends Node
      */
     public function getMobile()
     {
-        $this->requireDetail();
-
         $value = $this->getStringAttributes('mobile.value');
         if (!empty($value)) {
             $value = $this->getMobileCode() . $value;
@@ -147,7 +143,7 @@ class User extends Node
         $value = new DateTime();
         $value->setTime(0, 0, 0);
         try {
-            list($year, $month, $day) = explode('-', $this->getStringAttributes('birthday'));
+            [$year, $month, $day] = explode('-', $this->getStringAttributes('birthday'));
             $value->setDate(intval($year), intval($month), intval($day));
         } catch (Throwable $e) {
         }
@@ -292,7 +288,6 @@ class User extends Node
      */
     public function isMobileVerify()
     {
-        $this->requireDetail();
         return $this->getBooleanAttributes('mobile.verify');
     }
 

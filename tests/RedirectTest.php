@@ -45,10 +45,11 @@ class RedirectTest extends TestCase
     {
         $client_query = 'client_id=' . $sdk->getClientID();
 
-        $url = $sdk->redirect->authorize('RedirectTest', [
+        $url = $sdk->redirect->authorize($_ENV['REDIRECT_URI'], [
             'scope' => [
                 ScopeConstants::USER_BASIC,
             ],
+            'state' => 'RedirectTest',
         ]);
         $this->assertStringContainsString($client_query, $url);
         $this->assertStringContainsString('scope=' . ScopeConstants::USER_BASIC, $url);
