@@ -100,6 +100,7 @@ class ServiceTest extends TestCase
         $user = $sdk->service->extend($_ENV['USER_ID'], $service->getId());
         $this->assertInstanceOf(User::class, $user);
         $this->assertTrue($user->hasService($service->getId()));
+        $this->assertTrue($user->hasService($service->getSlug()));
     }
 
     /**
@@ -121,12 +122,16 @@ class ServiceTest extends TestCase
     public function testNew(MemberSDK $sdk)
     {
         // Create
-        $service = $sdk->service->create('Test service');
+        $service = $sdk->service->create('Test service', [
+            'slug' => 'sdk.' . time(),
+        ]);
         $this->assertInstanceOf(Service::class, $service);
         $this->assertFalse($service->isEnable());
 
         // Update
-        $service = $sdk->service->update($service->getId(), ['status' => ServiceStatusConstants::ENABLED]);
+        $service = $sdk->service->update($service->getId(), [
+            'status' => ServiceStatusConstants::ENABLED,
+        ]);
         $this->assertInstanceOf(Service::class, $service);
         $this->assertTrue($service->isEnable());
 

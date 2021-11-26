@@ -18,6 +18,16 @@ class Service extends Node
     }
 
     /**
+     * Service unique key in console
+     *
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->getStringAttributes('slug');
+    }
+
+    /**
      * Service display name
      *
      * @return string

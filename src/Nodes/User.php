@@ -261,6 +261,39 @@ class User extends Node
     }
 
     /**
+     * Get service slug list
+     *
+     * @return array
+     */
+    public function getServiceSlugList()
+    {
+        $this->requireDetail();
+        return array_column($this->getArrayAttributes('service'), 'slug');
+    }
+
+    /**
+     * Get certificate ID list
+     *
+     * @return array
+     */
+    public function getCertificateList()
+    {
+        $this->requireDetail();
+        return array_column($this->getArrayAttributes('certificate'), 'id');
+    }
+
+    /**
+     * Get certificate slug list
+     *
+     * @return array
+     */
+    public function getCertificateSlugList()
+    {
+        $this->requireDetail();
+        return array_column($this->getArrayAttributes('certificate'), 'slug');
+    }
+
+    /**
      * Get flag name list
      *
      * @return array
@@ -315,12 +348,35 @@ class User extends Node
     /**
      * Member has service
      *
-     * @param int $id
+     * @param $value
      * @return bool
      */
-    public function hasService(int $id)
+    public function hasService($value)
     {
-        return in_array($id, $this->getServiceList());
+        if (in_array($value, $this->getServiceList())) {
+            return true;
+        }
+        if (in_array($value, $this->getServiceSlugList())) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Member authorized certificate
+     *
+     * @param $value
+     * @return bool
+     */
+    public function hasCertificate($value)
+    {
+        if (in_array($value, $this->getCertificateList())) {
+            return true;
+        }
+        if (in_array($value, $this->getCertificateSlugList())) {
+            return true;
+        }
+        return false;
     }
 
     /**
