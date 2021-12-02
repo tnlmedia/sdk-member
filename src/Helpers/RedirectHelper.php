@@ -125,6 +125,17 @@ class RedirectHelper extends Helper
     }
 
     /**
+     * Purchase a certificate
+     *
+     * @param array $query
+     * @return string
+     */
+    public function purchaseCertificate(array $query = [])
+    {
+        return $this->buildUrl('product/forward', $query);
+    }
+
+    /**
      * Build website url
      *
      * @param string $path
