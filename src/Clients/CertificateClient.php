@@ -2,15 +2,13 @@
 
 namespace TNLMedia\MemberSDK\Clients;
 
-use TNLMedia\MemberSDK\Constants\ServicePeriodConstants;
+use TNLMedia\MemberSDK\Nodes\Certificate;
 use TNLMedia\MemberSDK\Nodes\SearchResult;
-use TNLMedia\MemberSDK\Nodes\Service;
-use TNLMedia\MemberSDK\Nodes\User;
 
-class ServiceClient extends Client
+class CertificateClient extends Client
 {
     /**
-     * Search service in console
+     * Search certificate in console
      *
      * @param array $filters
      * @param string|null $sort
@@ -27,7 +25,7 @@ class ServiceClient extends Client
      * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
      * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
      * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
-     * @see https://member.tnlmedia.com/docs/#/v1/charge/service-search
+     * @see https://member.tnlmedia.com/docs/#/v1/charge/certificate-search
      */
     public function search(array $filters = [], string $sort = null, int $offset = 0, int $limit = 10)
     {
@@ -40,11 +38,11 @@ class ServiceClient extends Client
             $parameters['offset'] = $offset;
         }
         $parameters['limit'] = $limit;
-        $result = $this->core->request('services', $parameters);
+        $result = $this->core->request('certificates', $parameters);
 
         // Process result
         foreach ($result['list'] as $key => $item) {
-            $result['list'][$key] = new Service($item, $this->core);
+            $result['list'][$key] = new Certificate($item, $this->core);
         }
         $result = new SearchResult($result, $this->core);
 
@@ -52,11 +50,12 @@ class ServiceClient extends Client
     }
 
     /**
-     * Build new service
+     * Build new certificate
      *
+     * @param string $slug
      * @param string $name
      * @param array $attributes
-     * @return Service
+     * @return Certificate
      * @throws \TNLMedia\MemberSDK\Exceptions\AuthorizeException
      * @throws \TNLMedia\MemberSDK\Exceptions\DuplicateException
      * @throws \TNLMedia\MemberSDK\Exceptions\Exception
@@ -67,26 +66,27 @@ class ServiceClient extends Client
      * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
      * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
      * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
-     * @see https://member.tnlmedia.com/docs/#/v1/charge/service-create
+     * @see https://member.tnlmedia.com/docs/#/v1/charge/certificate-create
      */
-    public function create(string $name, array $attributes = [])
+    public function create(string $slug, string $name, array $attributes = [])
     {
         // Request
         $parameters = $attributes;
+        $parameters['slug'] = $slug;
         $parameters['name'] = $name;
-        $result = $this->core->request('services', $parameters, 'POST');
+        $result = $this->core->request('certificates', $parameters, 'POST');
 
         // Build
-        $service = new Service($result, $this->core);
-        return $service;
+        $certificate = new Certificate($result, $this->core);
+        return $certificate;
     }
 
     /**
-     * Update exists service
+     * Update exists certificate
      *
-     * @param int $service_id
+     * @param int $certificate_id
      * @param array $attributes
-     * @return Service
+     * @return Certificate
      * @throws \TNLMedia\MemberSDK\Exceptions\AuthorizeException
      * @throws \TNLMedia\MemberSDK\Exceptions\DuplicateException
      * @throws \TNLMedia\MemberSDK\Exceptions\Exception
@@ -97,23 +97,24 @@ class ServiceClient extends Client
      * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
      * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
      * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
-     * @see https://member.tnlmedia.com/docs/#/v1/charge/service-update
+     * @see https://member.tnlmedia.com/docs/#/v1/charge/certificate-update
      */
-    public function update(int $service_id, array $attributes = [])
+    public function update(int $certificate_id, array $attributes = [])
     {
         // Request
         $parameters = $attributes;
-        $result = $this->core->request('services/' . $service_id, $parameters, 'PATCH');
+        $result = $this->core->request('certificates/' . $certificate_id, $parameters, 'PATCH');
 
         // Build
-        $service = new Service($result, $this->core);
-        return $service;
+        $certificate = new Certificate($result, $this->core);
+        return $certificate;
     }
 
     /**
-     * Remove useless service
+     * Remove useless certificate
      *
-     * @param int $service_id
+     * @param int $certificate_id
+     * @return void
      * @throws \TNLMedia\MemberSDK\Exceptions\AuthorizeException
      * @throws \TNLMedia\MemberSDK\Exceptions\DuplicateException
      * @throws \TNLMedia\MemberSDK\Exceptions\Exception
@@ -124,44 +125,10 @@ class ServiceClient extends Client
      * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
      * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
      * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
-     * @see https://member.tnlmedia.com/docs/#/v1/charge/service-delete
+     * @see https://member.tnlmedia.com/docs/#/v1/charge/certificate-delete
      */
-    public function remove(int $service_id)
+    public function remove(int $certificate_id)
     {
-        $this->core->request('services/' . $service_id, [], 'DELETE');
-    }
-
-    /**
-     * Extend user service expire
-     *
-     * @param int $user_id
-     * @param int $service_id
-     * @param int $length
-     * @param string $type
-     * @return User
-     * @throws \TNLMedia\MemberSDK\Exceptions\AuthorizeException
-     * @throws \TNLMedia\MemberSDK\Exceptions\DuplicateException
-     * @throws \TNLMedia\MemberSDK\Exceptions\Exception
-     * @throws \TNLMedia\MemberSDK\Exceptions\FormatException
-     * @throws \TNLMedia\MemberSDK\Exceptions\NotFoundException
-     * @throws \TNLMedia\MemberSDK\Exceptions\ProtectedException
-     * @throws \TNLMedia\MemberSDK\Exceptions\RequestException
-     * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
-     * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
-     * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
-     * @see https://member.tnlmedia.com/docs/#/v1/user/service-extend
-     */
-    public function extend(int $user_id, int $service_id, int $length = 1, string $type = ServicePeriodConstants::MONTH)
-    {
-        // Request
-        $parameters = [];
-        $parameters['service'] = $service_id;
-        $parameters['type'] = $type;
-        $parameters['length'] = $length;
-        $result = $this->core->request('users/' . $user_id . '/service', $parameters, 'POST');
-
-        // Build
-        $user = new User($result, $this->core);
-        return $user;
+        $this->core->request('certificates/' . $certificate_id, [], 'DELETE');
     }
 }

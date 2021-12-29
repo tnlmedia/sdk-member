@@ -3,9 +3,9 @@
 namespace TNLMedia\MemberSDK\Nodes;
 
 use DateTime;
-use TNLMedia\MemberSDK\Constants\PlanStatusConstants;
+use TNLMedia\MemberSDK\Constants\CertificateStatusConstants;
 
-class Plan extends Node
+class Certificate extends Node
 {
     /**
      * Unique ID
@@ -18,13 +18,13 @@ class Plan extends Node
     }
 
     /**
-     * Plan display name
+     * Unique key in console
      *
      * @return string
      */
-    public function getName()
+    public function getSlug()
     {
-        return $this->getStringAttributes('name');
+        return $this->getStringAttributes('slug');
     }
 
     /**
@@ -38,23 +38,23 @@ class Plan extends Node
     }
 
     /**
-     * Period type
+     * Display name
      *
      * @return string
      */
-    public function getPeriodType()
+    public function getName()
     {
-        return $this->getStringAttributes('type');
+        return $this->getStringAttributes('name');
     }
 
     /**
-     * Period length
+     * Display description
      *
-     * @return int
+     * @return string
      */
-    public function getLength()
+    public function getDescription()
     {
-        return $this->getIntegerAttributes('length');
+        return $this->getStringAttributes('description');
     }
 
     /**
@@ -71,15 +71,14 @@ class Plan extends Node
      * Product page url
      *
      * @return string
-     * @deprecated Since 3.0
      */
-    public function getAction()
+    public function getProductUrl()
     {
-        return $this->getActionUrl();
+        return $this->getStringAttributes('product');
     }
 
     /**
-     * Product page url
+     * Purchase url
      *
      * @return string
      */
@@ -99,56 +98,62 @@ class Plan extends Node
     }
 
     /**
-     * Total completed history
+     * Total certificate owner
      *
      * @return int
-     * @deprecated Since 3.0
      */
-    public function countCompletedHistory()
+    public function countUser()
+    {
+        return $this->getIntegerAttributes('counter.users');
+    }
+
+    /**
+     * Total completed transaction
+     *
+     * @return int
+     */
+    public function countCompletedTransaction()
     {
         return $this->getIntegerAttributes('counter.completed');
     }
 
     /**
-     * Total failed history
+     * Total failed transaction
      *
      * @return int
-     * @deprecated Since 3.0
      */
-    public function countFailedHistory()
+    public function countFailedTransaction()
     {
         return $this->getIntegerAttributes('counter.failed');
     }
 
     /**
-     * Total cancelled history
+     * Total cancelled transaction
      *
      * @return int
-     * @deprecated Since 3.0
      */
-    public function countCancelledHistory()
+    public function countCancelledTransaction()
     {
         return $this->getIntegerAttributes('counter.cancelled');
     }
 
     /**
-     * Total returned history
+     * Total returned transaction
      *
      * @return int
-     * @deprecated Since 3.0
      */
-    public function countReturnedHistory()
+    public function countReturnedTransaction()
     {
         return $this->getIntegerAttributes('counter.returned');
     }
 
     /**
-     * Plan is available
+     * Certificate is available
      *
      * @return bool
      */
     public function isEnable()
     {
-        return $this->getIntegerAttributes('status') == PlanStatusConstants::ENABLED;
+        return $this->getIntegerAttributes('status') == CertificateStatusConstants::ENABLED;
     }
 }

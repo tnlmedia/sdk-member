@@ -71,8 +71,19 @@ class Service extends Node
      * Total completed history
      *
      * @return int
+     * @deprecated Since 3.0
      */
     public function countCompletedHistory()
+    {
+        return $this->countCompletedTransaction();
+    }
+
+    /**
+     * Total completed transaction
+     *
+     * @return int
+     */
+    public function countCompletedTransaction()
     {
         return $this->getIntegerAttributes('counter.completed');
     }
@@ -81,8 +92,19 @@ class Service extends Node
      * Total failed history
      *
      * @return int
+     * @deprecated Since 3.0
      */
     public function countFailedHistory()
+    {
+        return $this->countFailedTransaction();
+    }
+
+    /**
+     * Total failed transaction
+     *
+     * @return int
+     */
+    public function countFailedTransaction()
     {
         return $this->getIntegerAttributes('counter.failed');
     }
@@ -91,8 +113,19 @@ class Service extends Node
      * Total cancelled history
      *
      * @return int
+     * @deprecated Since 3.0
      */
     public function countCancelledHistory()
+    {
+        return $this->countCancelledTransaction();
+    }
+
+    /**
+     * Total cancelled transaction
+     *
+     * @return int
+     */
+    public function countCancelledTransaction()
     {
         return $this->getIntegerAttributes('counter.cancelled');
     }
@@ -101,8 +134,19 @@ class Service extends Node
      * Total returned history
      *
      * @return int
+     * @deprecated Since 3.0
      */
     public function countReturnedHistory()
+    {
+        return $this->countReturnedTransaction();
+    }
+
+    /**
+     * Total returned transaction
+     *
+     * @return int
+     */
+    public function countReturnedTransaction()
     {
         return $this->getIntegerAttributes('counter.returned');
     }

@@ -3,11 +3,11 @@
 namespace TNLMedia\MemberSDK\Constants;
 
 /**
- * Class ServiceStatusConstants
+ * Class CertificateStatusConstants
  * @package TNLMedia\MemberSDK\Constants
- * @see https://member.tnlmedia.com/docs/#/v1/charge/service-status
+ * @see https://member.tnlmedia.com/docs/#/v1/charge/certificate-status
  */
-class ServiceStatusConstants
+class CertificateStatusConstants
 {
     const DISABLED = 0;
     const ENABLED = 1;

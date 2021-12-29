@@ -5,7 +5,7 @@ namespace TNLMedia\MemberSDK\Constants;
 /**
  * Class PlanStatusConstants
  * @package TNLMedia\MemberSDK\Constants
- * @see https://member.tnlmedia.com/docs/#/v1/service/status-list
+ * @see https://member.tnlmedia.com/docs/#/v1/charge/service-status
  */
 class PlanStatusConstants
 {
