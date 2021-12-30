@@ -4,6 +4,7 @@ namespace TNLMedia\MemberSDK;
 
 use Throwable;
 use TNLMedia\MemberSDK\Clients\AuthorizeClient;
+use TNLMedia\MemberSDK\Clients\CertificateClient;
 use TNLMedia\MemberSDK\Clients\Client;
 use TNLMedia\MemberSDK\Clients\FlagClient;
 use TNLMedia\MemberSDK\Clients\PlanClient;
@@ -30,6 +31,7 @@ use TNLMedia\MemberSDK\Nodes\AccessToken;
  * @property UserClient $user
  * @property ServiceClient $service
  * @property PlanClient $plan
+ * @property CertificateClient $certificate
  * @property FlagClient $flag
  * @property RedirectHelper $redirect
  */

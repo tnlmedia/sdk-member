@@ -4,6 +4,7 @@ namespace TNLMedia\MemberSDK\Clients;
 
 use TNLMedia\MemberSDK\Nodes\Certificate;
 use TNLMedia\MemberSDK\Nodes\SearchResult;
+use TNLMedia\MemberSDK\Nodes\User;
 
 class CertificateClient extends Client
 {
@@ -130,5 +131,35 @@ class CertificateClient extends Client
     public function remove(int $certificate_id)
     {
         $this->core->request('certificates/' . $certificate_id, [], 'DELETE');
+    }
+
+    /**
+     * Authorize a certificate to user
+     *
+     * @param int $user_id
+     * @param int $certificate_id
+     * @return User
+     * @throws \TNLMedia\MemberSDK\Exceptions\AuthorizeException
+     * @throws \TNLMedia\MemberSDK\Exceptions\DuplicateException
+     * @throws \TNLMedia\MemberSDK\Exceptions\Exception
+     * @throws \TNLMedia\MemberSDK\Exceptions\FormatException
+     * @throws \TNLMedia\MemberSDK\Exceptions\NotFoundException
+     * @throws \TNLMedia\MemberSDK\Exceptions\ProtectedException
+     * @throws \TNLMedia\MemberSDK\Exceptions\RequestException
+     * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
+     * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
+     * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
+     * @see https://member.tnlmedia.com/docs/#/v1/user/certificate-auth
+     */
+    public function authorize(int $user_id, int $certificate_id)
+    {
+        // Request
+        $parameters = [];
+        $parameters['certificate'] = $certificate_id;
+        $result = $this->core->request('users/' . $user_id . '/certificate', $parameters, 'POST');
+
+        // Build
+        $user = new User($result, $this->core);
+        return $user;
     }
 }

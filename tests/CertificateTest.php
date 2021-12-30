@@ -5,13 +5,14 @@ namespace TNLMedia\MemberSDK\Tests;
 use ArrayIterator;
 use Dotenv\Dotenv;
 use PHPUnit\Framework\TestCase;
-use TNLMedia\MemberSDK\Constants\ServiceStatusConstants;
+use TNLMedia\MemberSDK\Constants\CertificateStatusConstants;
+use TNLMedia\MemberSDK\Exceptions\ProtectedException;
 use TNLMedia\MemberSDK\MemberSDK;
 use TNLMedia\MemberSDK\Nodes\AccessToken;
-use TNLMedia\MemberSDK\Nodes\Service;
+use TNLMedia\MemberSDK\Nodes\Certificate;
 use TNLMedia\MemberSDK\Nodes\User;
 
-class ServiceTest extends TestCase
+class CertificateTest extends TestCase
 {
     /**
      * Build SDK
@@ -41,7 +42,37 @@ class ServiceTest extends TestCase
     }
 
     /**
-     * Search service
+     * Search certificate
+     *
+     * @depends testSdk
+     * @param MemberSDK $sdk
+     * @return void
+     * @throws \TNLMedia\MemberSDK\Exceptions\AuthorizeException
+     * @throws \TNLMedia\MemberSDK\Exceptions\DuplicateException
+     * @throws \TNLMedia\MemberSDK\Exceptions\Exception
+     * @throws \TNLMedia\MemberSDK\Exceptions\FormatException
+     * @throws \TNLMedia\MemberSDK\Exceptions\NotFoundException
+     * @throws \TNLMedia\MemberSDK\Exceptions\ProtectedException
+     * @throws \TNLMedia\MemberSDK\Exceptions\RequestException
+     * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
+     * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
+     * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
+     */
+    public function testSearch(MemberSDK $sdk)
+    {
+        $result = $sdk->certificate->search([], null, 0, 1);
+        $this->assertInstanceOf(ArrayIterator::class, $result->getList());
+        foreach ($result->getList() as $certificate) {
+            $this->assertInstanceOf(Certificate::class, $certificate);
+            $this->assertNotEmpty($certificate->getSlug());
+            $this->assertNotEmpty($certificate->getName());
+        }
+        $this->assertEquals(1, $result->getCount());
+        $this->assertGreaterThan(0, $result->getTotal());
+    }
+
+    /**
+     * New certificate and update it.
      *
      * @depends testSdk
      * @param MemberSDK $sdk
@@ -57,29 +88,34 @@ class ServiceTest extends TestCase
      * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
      * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
      */
-    public function testSearch(MemberSDK $sdk)
+    public function testNew(MemberSDK $sdk)
     {
-        $result = $sdk->service->search([], null, 0, 1);
-        $this->assertInstanceOf(ArrayIterator::class, $result->getList());
-        foreach ($result->getList() as $service) {
-            $this->assertInstanceOf(Service::class, $service);
-            $this->assertNotEmpty($service->getSlug());
-            $this->assertNotEmpty($service->getName());
-        }
-        $this->assertEquals(1, $result->getCount());
-        $this->assertGreaterThan(0, $result->getTotal());
+        // Create
+        $slug = 'test.' . time();
+        $certificate = $sdk->certificate->create($slug, 'Test certificate');
+        $this->assertInstanceOf(Certificate::class, $certificate);
+        $this->assertEquals($slug, $certificate->getSlug());
+        $this->assertFalse($certificate->isEnable());
+
+        // Update
+        $certificate = $sdk->certificate->update($certificate->getId(), [
+            'status' => CertificateStatusConstants::ENABLED,
+        ]);
+        $this->assertInstanceOf(Certificate::class, $certificate);
+        $this->assertTrue($certificate->isEnable());
 
         return [
             'sdk' => $sdk,
-            'service' => $service,
+            'certificate' => $certificate,
         ];
     }
 
     /**
-     * Extend user
+     * Authorize to user
      *
-     * @depends testSearch
+     * @depends testNew
      * @param array $source
+     * @return array
      * @throws \TNLMedia\MemberSDK\Exceptions\AuthorizeException
      * @throws \TNLMedia\MemberSDK\Exceptions\DuplicateException
      * @throws \TNLMedia\MemberSDK\Exceptions\Exception
@@ -91,52 +127,49 @@ class ServiceTest extends TestCase
      * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
      * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
      */
-    public function testExtend(array $source)
+    public function testAuthorize(array $source)
     {
         /** @var MemberSDK $sdk */
         $sdk = $source['sdk'];
-        /** @var Service $service */
-        $service = $source['service'];
+        /** @var Certificate $certificate */
+        $certificate = $source['certificate'];
 
-        $user = $sdk->service->extend($_ENV['USER_ID'], $service->getId());
+        $user = $sdk->certificate->authorize($_ENV['USER_ID'], $certificate->getId());
         $this->assertInstanceOf(User::class, $user);
-        $this->assertTrue($user->hasService($service->getId()));
-        $this->assertTrue($user->hasService($service->getSlug()));
+        $this->assertTrue($user->hasCertificate($certificate->getId()));
+        $this->assertTrue($user->hasCertificate($certificate->getSlug()));
+
+        return [
+            'sdk' => $sdk,
+            'certificate' => $certificate,
+        ];
     }
 
     /**
-     * New service and update, clear it.
+     * Remove certificate
      *
-     * @depends testSdk
-     * @param MemberSDK $sdk
+     * @depends testAuthorize
+     * @param array $source
+     * @return void
+     * @throws ProtectedException
      * @throws \TNLMedia\MemberSDK\Exceptions\AuthorizeException
      * @throws \TNLMedia\MemberSDK\Exceptions\DuplicateException
      * @throws \TNLMedia\MemberSDK\Exceptions\Exception
      * @throws \TNLMedia\MemberSDK\Exceptions\FormatException
      * @throws \TNLMedia\MemberSDK\Exceptions\NotFoundException
-     * @throws \TNLMedia\MemberSDK\Exceptions\ProtectedException
      * @throws \TNLMedia\MemberSDK\Exceptions\RequestException
      * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
      * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
      * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
      */
-    public function testNew(MemberSDK $sdk)
+    public function testRemove(array $source)
     {
-        // Create
-        $service = $sdk->service->create('Test service', [
-            'slug' => 'sdk.' . time(),
-        ]);
-        $this->assertInstanceOf(Service::class, $service);
-        $this->assertFalse($service->isEnable());
+        /** @var MemberSDK $sdk */
+        $sdk = $source['sdk'];
+        /** @var Certificate $certificate */
+        $certificate = $source['certificate'];
 
-        // Update
-        $service = $sdk->service->update($service->getId(), [
-            'status' => ServiceStatusConstants::ENABLED,
-        ]);
-        $this->assertInstanceOf(Service::class, $service);
-        $this->assertTrue($service->isEnable());
-
-        // Delete
-        $sdk->service->remove($service->getId());
+        $this->expectException(ProtectedException::class);
+        $sdk->certificate->remove($certificate->getId());
     }
 }

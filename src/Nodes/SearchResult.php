@@ -10,7 +10,7 @@ class SearchResult extends Node implements IteratorAggregate
     /**
      * {@inheritDoc}
      */
-    public function getIterator()
+    public function getIterator(): ArrayIterator
     {
         return $this->getList();
     }
@@ -20,7 +20,7 @@ class SearchResult extends Node implements IteratorAggregate
      *
      * @return ArrayIterator
      */
-    public function getList()
+    public function getList(): ArrayIterator
     {
         return new ArrayIterator($this->getArrayAttributes('list'));
     }
@@ -30,7 +30,7 @@ class SearchResult extends Node implements IteratorAggregate
      *
      * @return int|void
      */
-    public function getCount()
+    public function getCount(): int
     {
         return $this->getList()->count();
     }
@@ -40,7 +40,7 @@ class SearchResult extends Node implements IteratorAggregate
      *
      * @return int
      */
-    public function getTotal()
+    public function getTotal(): int
     {
         return $this->getIntegerAttributes('total');
     }
