@@ -88,8 +88,16 @@ class PlanTest extends TestCase
     public function testNew(MemberSDK $sdk)
     {
         // Create
-        $plan = $sdk->plan->create(self::SERVICE_ID, 'Test plan');
+        $slug = 'test.' . time();
+        $plan = $sdk->plan->create(self::SERVICE_ID, 'Test plan', [
+            'slug' => $slug,
+        ]);
         $this->assertInstanceOf(Plan::class, $plan);
+        $this->assertEquals($slug, $plan->getSlug());
+        $this->assertEquals('TWD', $plan->getCurrency());
+        $this->assertEquals(0, $plan->getPrice());
+        $this->assertFalse($plan->isRecurring());
+        $this->assertFalse($plan->isVisible());
         $this->assertFalse($plan->isEnable());
 
         // Update

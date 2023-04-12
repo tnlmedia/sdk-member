@@ -95,6 +95,9 @@ class CertificateTest extends TestCase
         $certificate = $sdk->certificate->create($slug, 'Test certificate');
         $this->assertInstanceOf(Certificate::class, $certificate);
         $this->assertEquals($slug, $certificate->getSlug());
+        $this->assertEquals('TWD', $certificate->getCurrency());
+        $this->assertEquals(0, $certificate->getPrice());
+        $this->assertFalse($certificate->isVisible());
         $this->assertFalse($certificate->isEnable());
 
         // Update

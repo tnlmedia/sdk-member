@@ -153,6 +153,18 @@ class Node implements NodeInterface
     }
 
     /**
+     * Get attributes in float
+     *
+     * @param string|null $key
+     * @param int $default
+     * @return float
+     */
+    public function getFloatAttributes($key = null, int $default = 0)
+    {
+        return floatval($this->getAttributes($key, $default));
+    }
+
+    /**
      * Get attributes as boolean
      *
      * @param null $key

@@ -18,6 +18,16 @@ class Plan extends Node
     }
 
     /**
+     * Unique slug in console
+     *
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->getStringAttributes('slug');
+    }
+
+    /**
      * Plan display name
      *
      * @return string
@@ -55,6 +65,26 @@ class Plan extends Node
     public function getLength()
     {
         return $this->getIntegerAttributes('length');
+    }
+
+    /**
+     * Price currency
+     *
+     * @return string
+     */
+    public function getCurrency()
+    {
+        return $this->getStringAttributes('currency');
+    }
+
+    /**
+     * Price
+     *
+     * @return float
+     */
+    public function getPrice()
+    {
+        return $this->getFloatAttributes('price');
     }
 
     /**
@@ -140,6 +170,26 @@ class Plan extends Node
     public function countReturnedHistory()
     {
         return $this->getIntegerAttributes('counter.returned');
+    }
+
+    /**
+     * Plan can be recurring
+     *
+     * @return bool
+     */
+    public function isRecurring()
+    {
+        return $this->getBooleanAttributes('recurring');
+    }
+
+    /**
+     * Plan is visible on subscription page
+     *
+     * @return bool
+     */
+    public function isVisible()
+    {
+        return $this->getBooleanAttributes('visible');
     }
 
     /**

@@ -58,6 +58,26 @@ class Certificate extends Node
     }
 
     /**
+     * Price currency
+     *
+     * @return string
+     */
+    public function getCurrency()
+    {
+        return $this->getStringAttributes('currency');
+    }
+
+    /**
+     * Price
+     *
+     * @return float
+     */
+    public function getPrice()
+    {
+        return $this->getFloatAttributes('price');
+    }
+
+    /**
      * Sort weight
      *
      * @return int
@@ -145,6 +165,16 @@ class Certificate extends Node
     public function countReturnedTransaction()
     {
         return $this->getIntegerAttributes('counter.returned');
+    }
+
+    /**
+     * Certificate is visible on product page
+     *
+     * @return bool
+     */
+    public function isVisible()
+    {
+        return $this->getBooleanAttributes('visible');
     }
 
     /**
