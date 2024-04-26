@@ -27,7 +27,7 @@ class ServiceClient extends Client
      * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
      * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
      * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
-     * @see https://member.tnlmedia.com/docs/#/v1/charge/service-search
+     * @see https://member.inkmaginecms.com/docs/#/v1/charge/service-search
      */
     public function search(array $filters = [], string $sort = null, int $offset = 0, int $limit = 10)
     {
@@ -67,7 +67,7 @@ class ServiceClient extends Client
      * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
      * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
      * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
-     * @see https://member.tnlmedia.com/docs/#/v1/charge/service-create
+     * @see https://member.inkmaginecms.com/docs/#/v1/charge/service-create
      */
     public function create(string $name, array $attributes = [])
     {
@@ -97,7 +97,7 @@ class ServiceClient extends Client
      * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
      * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
      * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
-     * @see https://member.tnlmedia.com/docs/#/v1/charge/service-update
+     * @see https://member.inkmaginecms.com/docs/#/v1/charge/service-update
      */
     public function update(int $service_id, array $attributes = [])
     {
@@ -124,7 +124,7 @@ class ServiceClient extends Client
      * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
      * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
      * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
-     * @see https://member.tnlmedia.com/docs/#/v1/charge/service-delete
+     * @see https://member.inkmaginecms.com/docs/#/v1/charge/service-delete
      */
     public function remove(int $service_id)
     {
@@ -149,7 +149,7 @@ class ServiceClient extends Client
      * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
      * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
      * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
-     * @see https://member.tnlmedia.com/docs/#/v1/user/service-extend
+     * @see https://member.inkmaginecms.com/docs/#/v1/user/service-extend
      */
     public function extend(int $user_id, int $service_id, int $length = 1, string $type = ServicePeriodConstants::MONTH)
     {

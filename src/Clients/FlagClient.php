@@ -26,7 +26,7 @@ class FlagClient extends Client
      * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
      * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
      * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
-     * @see https://member.tnlmedia.com/docs/#/v1/flag/search
+     * @see https://member.inkmaginecms.com/docs/#/v1/flag/search
      */
     public function search(array $filters = [], string $sort = null, int $offset = 0, int $limit = 10)
     {
@@ -66,7 +66,7 @@ class FlagClient extends Client
      * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
      * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
      * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
-     * @see https://member.tnlmedia.com/docs/#/v1/user/flag-set
+     * @see https://member.inkmaginecms.com/docs/#/v1/user/flag-set
      */
     public function setFlag(int $user_id, string $name)
     {
@@ -96,7 +96,7 @@ class FlagClient extends Client
      * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
      * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
      * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
-     * @see https://member.tnlmedia.com/docs/#/v1/user/flag-unset
+     * @see https://member.inkmaginecms.com/docs/#/v1/user/flag-unset
      */
     public function removeFlag(int $user_id, string $name)
     {

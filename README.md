@@ -14,7 +14,8 @@ composer require tnlmedia/member-sdk
 * 7.4
 * 8.0
 * 8.1
+* 8.2
 
 ### Document
 
-https://member.tnlmedia.com/docs/
+https://member.inkmaginecms.com/docs/

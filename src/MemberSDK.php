@@ -26,6 +26,7 @@ use TNLMedia\MemberSDK\Nodes\AccessToken;
 
 /**
  * Class MemberSDK
+ *
  * @package TNLMedia\MemberSDK
  * @property AuthorizeClient $authorize
  * @property UserClient $user
@@ -70,7 +71,7 @@ class MemberSDK
      *
      * @var string
      */
-    protected $host = 'member.tnlmedia.com';
+    protected $host = 'member.inkmaginecms.com';
 
     /**
      * API version
@@ -228,7 +229,7 @@ class MemberSDK
      */
     public function useProduction()
     {
-        $this->host = 'member.tnlmedia.com';
+        $this->host = 'member.inkmaginecms.com';
         return $this;
     }
 
@@ -239,7 +240,7 @@ class MemberSDK
      */
     public function useSandbox()
     {
-        $this->host = 'sandbox-member.tnlmedia.com';
+        $this->host = 'sandbox-member.inkmaginecms.com';
         return $this;
     }
 
@@ -250,7 +251,19 @@ class MemberSDK
      */
     public function useStage()
     {
-        $this->host = 'stage-member.tnlmedia.com';
+        $this->host = 'stage-member.inkmaginecms.com';
+        return $this;
+    }
+
+    /**
+     * Set specific host
+     *
+     * @param string $host
+     * @return $this
+     */
+    public function setHost(string $host)
+    {
+        $this->host = $host;
         return $this;
     }
 

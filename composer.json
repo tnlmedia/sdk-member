@@ -5,8 +5,8 @@
     "license": "Apache-2.0",
     "authors": [
         {
-            "name": "TNL Media Group",
-            "email": "to.it@tnlmedia.com"
+            "name": "TNLMediagene",
+            "email": "to.it@inkmaginecms.com"
         }
     ],
     "require": {
@@ -15,7 +15,7 @@
         "ext-json": "*"
     },
     "require-dev": {
-        "phpunit/phpunit": "^7.0 || ^8.0 || ^9.0",
+        "phpunit/phpunit": "^7.0 || ^8.0 || ^9.0 || ^10.0 || ^11.0",
         "vlucas/phpdotenv": "^5.0"
     },
     "autoload": {

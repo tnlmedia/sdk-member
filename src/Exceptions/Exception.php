@@ -8,7 +8,7 @@ use Throwable;
 /**
  * Class Exception
  * @package TNLMedia\MemberSDK\Exceptions
- * @see https://member.tnlmedia.com/docs/#/v1/response
+ * @see https://member.inkmaginecms.com/docs/#/v1/response
  */
 class Exception extends ExceptionBase
 {

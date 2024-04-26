@@ -5,7 +5,7 @@ namespace TNLMedia\MemberSDK\Constants;
 /**
  * Class ServicePeriodConstants
  * @package TNLMedia\MemberSDK\Constants
- * @see https://member.tnlmedia.com/docs/#/v1/charge/service-period
+ * @see https://member.inkmaginecms.com/docs/#/v1/charge/service-period
  */
 class ServicePeriodConstants
 {

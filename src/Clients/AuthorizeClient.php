@@ -22,7 +22,7 @@ class AuthorizeClient extends Client
      * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
      * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
      * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
-     * @see https://member.tnlmedia.com/docs/#/v1/auth/token-code
+     * @see https://member.inkmaginecms.com/docs/#/v1/auth/token-code
      */
     public function authCode(string $code, string $redirect_uri)
     {
@@ -58,7 +58,7 @@ class AuthorizeClient extends Client
      * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
      * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
      * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
-     * @see https://member.tnlmedia.com/docs/#/v1/auth/token-credentials
+     * @see https://member.inkmaginecms.com/docs/#/v1/auth/token-credentials
      */
     public function credential(array $scopes = [])
     {

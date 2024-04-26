@@ -26,7 +26,7 @@ class CertificateClient extends Client
      * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
      * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
      * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
-     * @see https://member.tnlmedia.com/docs/#/v1/charge/certificate-search
+     * @see https://member.inkmaginecms.com/docs/#/v1/charge/certificate-search
      */
     public function search(array $filters = [], string $sort = null, int $offset = 0, int $limit = 10)
     {
@@ -67,7 +67,7 @@ class CertificateClient extends Client
      * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
      * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
      * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
-     * @see https://member.tnlmedia.com/docs/#/v1/charge/certificate-create
+     * @see https://member.inkmaginecms.com/docs/#/v1/charge/certificate-create
      */
     public function create(string $slug, string $name, array $attributes = [])
     {
@@ -98,7 +98,7 @@ class CertificateClient extends Client
      * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
      * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
      * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
-     * @see https://member.tnlmedia.com/docs/#/v1/charge/certificate-update
+     * @see https://member.inkmaginecms.com/docs/#/v1/charge/certificate-update
      */
     public function update(int $certificate_id, array $attributes = [])
     {
@@ -126,7 +126,7 @@ class CertificateClient extends Client
      * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
      * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
      * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
-     * @see https://member.tnlmedia.com/docs/#/v1/charge/certificate-delete
+     * @see https://member.inkmaginecms.com/docs/#/v1/charge/certificate-delete
      */
     public function remove(int $certificate_id)
     {
@@ -149,7 +149,7 @@ class CertificateClient extends Client
      * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
      * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
      * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
-     * @see https://member.tnlmedia.com/docs/#/v1/user/certificate-auth
+     * @see https://member.inkmaginecms.com/docs/#/v1/user/certificate-auth
      */
     public function authorize(int $user_id, int $certificate_id)
     {

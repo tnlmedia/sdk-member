@@ -5,7 +5,7 @@ namespace TNLMedia\MemberSDK\Constants;
 /**
  * Class ScopeConstants
  * @package TNLMedia\MemberSDK\Constants
- * @see https://member.tnlmedia.com/docs/#/v1/auth/scope
+ * @see https://member.inkmaginecms.com/docs/#/v1/auth/scope
  */
 class ScopeConstants
 {

@@ -25,7 +25,7 @@ class UserClient extends Client
      * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
      * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
      * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
-     * @see https://member.tnlmedia.com/docs/#/v1/user/search
+     * @see https://member.inkmaginecms.com/docs/#/v1/user/search
      */
     public function search(array $filters = [], string $sort = null, int $offset = 0, int $limit = 10)
     {
@@ -64,7 +64,7 @@ class UserClient extends Client
      * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
      * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
      * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
-     * @see https://member.tnlmedia.com/docs/#/v1/user/get
+     * @see https://member.inkmaginecms.com/docs/#/v1/user/get
      */
     public function get(int $user_id)
     {
@@ -92,7 +92,7 @@ class UserClient extends Client
      * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
      * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
      * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
-     * @see https://member.tnlmedia.com/docs/#/v1/user/update-status
+     * @see https://member.inkmaginecms.com/docs/#/v1/user/update-status
      */
     public function updateStatus(int $user_id, int $status)
     {

@@ -26,7 +26,7 @@ class PlanClient extends Client
      * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
      * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
      * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
-     * @see https://member.tnlmedia.com/docs/#/v1/charge/plan-search
+     * @see https://member.inkmaginecms.com/docs/#/v1/charge/plan-search
      */
     public function search(int $service_id, array $filters = [], string $sort = null, int $offset = 0, int $limit = 10)
     {
@@ -67,7 +67,7 @@ class PlanClient extends Client
      * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
      * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
      * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
-     * @see https://member.tnlmedia.com/docs/#/v1/charge/plan-create
+     * @see https://member.inkmaginecms.com/docs/#/v1/charge/plan-create
      */
     public function create(int $service_id, string $name, array $attributes = [])
     {
@@ -98,7 +98,7 @@ class PlanClient extends Client
      * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
      * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
      * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
-     * @see https://member.tnlmedia.com/docs/#/v1/charge/plan-update
+     * @see https://member.inkmaginecms.com/docs/#/v1/charge/plan-update
      */
     public function update(int $service_id, int $plan_id, array $attributes = [])
     {
@@ -126,7 +126,7 @@ class PlanClient extends Client
      * @throws \TNLMedia\MemberSDK\Exceptions\RequireException
      * @throws \TNLMedia\MemberSDK\Exceptions\UnnecessaryException
      * @throws \TNLMedia\MemberSDK\Exceptions\UploadException
-     * @see https://member.tnlmedia.com/docs/#/v1/charge/plan-delete
+     * @see https://member.inkmaginecms.com/docs/#/v1/charge/plan-delete
      */
     public function remove(int $service_id, int $plan_id)
     {
